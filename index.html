@@ -1,0 +1,1946 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>أرماكس Armax | تجارة الأدوات المنزلية بالجملة</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com "></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com " />
+    <link rel="preconnect" href="https://fonts.gstatic.com " crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400 ;500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css "
+    />
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js "></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              armax: {
+                blue: "#003B6D",
+                lightBlue: "#0056A3",
+                orange: "#FF8C42",
+                lightOrange: "#FFA726",
+                dark: "#0F172A",
+                darker: "#0B1120",
+              },
+            },
+            fontFamily: {
+              arabic: ["Tajawal", "sans-serif"],
+              english: ["Inter", "sans-serif"],
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      * {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Tajawal", "Inter", sans-serif;
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .dark .glass-effect {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .product-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .product-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #003b6d 0%, #ff8c42 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-pattern {
+        background-image: radial-gradient(
+          circle at 2px 2px,
+          rgba(255, 255, 255, 0.15) 1px,
+          transparent 0
+        );
+        background-size: 40px 40px;
+      }
+
+      .nav-link {
+        position: relative;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        right: 0;
+        background: #ff8c42;
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .price-tag {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .price-tag::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .price-tag:hover::before {
+        left: 100%;
+      }
+
+      /* Cart Styles - New Addition */
+      .cart-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .cart-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .cart-sidebar {
+        position: fixed;
+        top: 0;
+        right: -420px;
+        width: 420px;
+        height: 100%;
+        background: white;
+        z-index: 1000;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dark .cart-sidebar {
+        background: #0f172a;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cart-sidebar.active {
+        right: 0;
+      }
+
+      .cart-item {
+        transition: all 0.3s ease;
+      }
+
+      .cart-item:hover {
+        background: rgba(0, 59, 109, 0.03);
+      }
+
+      .dark .cart-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      @media (max-width: 480px) {
+        .cart-sidebar {
+          width: 100%;
+          right: -100%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-50 dark:bg-armax-darker text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden"
+  >
+    <!-- Loading Screen -->
+    <div
+      id="loader"
+      class="fixed inset-0 z-[100] bg-armax-blue flex items-center justify-center transition-opacity duration-500"
+    >
+      <div class="text-center">
+        <img
+          src="logo.jpeg"
+          alt="Armax"
+          class="w-32 h-32 mx-auto mb-4 animate-pulse rounded-full object-contain bg-white p-4"
+        />
+        <div class="text-white text-2xl font-bold animate-pulse">
+          ارماكس | Armax
+        </div>
+        <div class="text-armax-orange mt-2">جاري التحميل...</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+      id="navbar"
+      class="fixed w-full z-50 transition-all duration-300 bg-white/90 dark:bg-armax-dark/90 backdrop-blur-md shadow-lg"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <a href="#" class="flex items-center gap-3 group">
+            <div
+              class="relative overflow-hidden rounded-full bg-white p-1 shadow-lg group-hover:shadow-xl transition-shadow"
+            >
+              <img
+                src="logo.jpeg"
+                alt="Armax Logo"
+                class="w-12 h-12 object-contain"
+              />
+            </div>
+            <div class="hidden sm:block">
+              <div
+                class="text-2xl font-black text-armax-blue dark:text-white leading-none"
+              >
+                أرمــاكس
+              </div>
+              <div class="text-xs text-armax-orange font-bold tracking-wider">
+                ARMAX
+              </div>
+            </div>
+          </a>
+
+          <!-- Desktop Menu -->
+          <div class="hidden lg:flex items-center gap-8">
+            <a
+              href="#home"
+              class="nav-link text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
+              >الرئيسية</a
+            >
+            <a
+              href="#about"
+              class="nav-link text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
+              >عن الشركة</a
+            >
+            <a
+              href="#products"
+              class="nav-link text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
+              >المنتجات</a
+            >
+            <a
+              href="#offers"
+              class="nav-link text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
+              >العروض</a
+            >
+            <a
+              href="#contact"
+              class="nav-link text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
+              >تواصل معنا</a
+            >
+          </div>
+
+          <!-- Controls -->
+          <div class="flex items-center gap-4">
+            <!-- Language Toggle -->
+            <button
+              onclick="toggleLanguage()"
+              class="px-3 py-1 rounded-full border-2 border-armax-blue text-armax-blue dark:border-armax-orange dark:text-armax-orange font-bold text-sm hover:bg-armax-blue hover:text-white dark:hover:bg-armax-orange dark:hover:text-white transition-all"
+            >
+              EN
+            </button>
+
+            <!-- Dark Mode Toggle -->
+            <button
+              onclick="toggleDarkMode()"
+              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+            >
+              <i class="fas fa-moon dark:hidden"></i>
+              <i class="fas fa-sun hidden dark:block"></i>
+            </button>
+
+            <!-- Cart Button - New Addition -->
+            <button
+              onclick="toggleCart()"
+              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white hover:bg-armax-orange hover:text-white transition-all relative"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span
+                id="cartCount"
+                class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center transform scale-0 transition-transform duration-300"
+                >0</span
+              >
+            </button>
+
+            <!-- Mobile Menu Button -->
+            <button
+              onclick="toggleMobileMenu()"
+              class="lg:hidden w-10 h-10 rounded-lg bg-armax-blue text-white flex items-center justify-center"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          id="mobileMenu"
+          class="lg:hidden hidden mt-4 pb-4 border-t dark:border-gray-700 pt-4"
+        >
+          <div class="flex flex-col gap-3">
+            <a
+              href="#home"
+              class="text-gray-700 dark:text-gray-200 font-bold py-2 hover:text-armax-orange transition-colors"
+              >الرئيسية</a
+            >
+            <a
+              href="#about"
+              class="text-gray-700 dark:text-gray-200 font-bold py-2 hover:text-armax-orange transition-colors"
+              >عن الشركة</a
+            >
+            <a
+              href="#products"
+              class="text-gray-700 dark:text-gray-200 font-bold py-2 hover:text-armax-orange transition-colors"
+              >المنتجات</a
+            >
+            <a
+              href="#offers"
+              class="text-gray-700 dark:text-gray-200 font-bold py-2 hover:text-armax-orange transition-colors"
+              >العروض</a
+            >
+            <a
+              href="#contact"
+              class="text-gray-700 dark:text-gray-200 font-bold py-2 hover:text-armax-orange transition-colors"
+              >تواصل معنا</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-armax-darker dark:to-armax-dark"
+    >
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 hero-pattern opacity-30"></div>
+
+      <!-- Decorative Elements -->
+      <div
+        class="absolute top-20 left-10 w-72 h-72 bg-armax-blue/10 rounded-full blur-3xl animate-pulse-slow"
+      ></div>
+      <div
+        class="absolute bottom-20 right-10 w-96 h-96 bg-armax-orange/10 rounded-full blur-3xl animate-pulse-slow"
+        style="animation-delay: 2s"
+      ></div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <!-- Content -->
+          <div class="text-center lg:text-right">
+            <h1
+              class="text-5xl lg:text-7xl font-black text-armax-blue dark:text-white mb-6 leading-tight"
+            >
+              أرماكس
+              <span class="block text-armax-orange">للتجارة</span>
+            </h1>
+
+            <p
+              class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+            >
+              نقدم لكم تشكيلة واسعة من الأدوات المنزلية عالية الجودة بأسعار
+              الجملة المنافسة. نضمن لكم أفضل المنتجات مع خدمة توصيل سريعة وضمان
+              شامل.
+            </p>
+
+            <div
+              class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
+              <a
+                href="#products"
+                class="px-8 py-4 rounded-full bg-armax-blue text-white font-bold text-lg hover:bg-armax-lightBlue transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-shopping-bag"></i>
+                تصفح المنتجات
+              </a>
+              <a
+                href="#contact"
+                class="px-8 py-4 rounded-full border-2 border-armax-orange text-armax-orange font-bold text-lg hover:bg-armax-orange hover:text-white transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-phone"></i>
+                اتصل بنا
+              </a>
+            </div>
+
+            <!-- Stats -->
+            <div
+              class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t dark:border-gray-700"
+            >
+              <div class="text-center">
+                <div
+                  class="text-3xl font-black text-armax-blue dark:text-armax-orange"
+                >
+                  +1000
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  منتج متنوع
+                </div>
+              </div>
+              <div class="text-center">
+                <div
+                  class="text-3xl font-black text-armax-blue dark:text-armax-orange"
+                >
+                  +500
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  عميل سعيد
+                </div>
+              </div>
+              <div class="text-center">
+                <div
+                  class="text-3xl font-black text-armax-blue dark:text-armax-orange"
+                >
+                  24/7
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  دعم فني
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Image -->
+          <div class="relative">
+            <div class="relative z-10 animate-float">
+              <div
+                class="relative rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-4"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop "
+                  alt="Kitchen Tools"
+                  class="rounded-2xl w-full object-cover h-[500px]"
+                />
+              </div>
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-tr from-armax-blue to-armax-orange rounded-3xl transform rotate-3 opacity-20 -z-10"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white dark:bg-armax-dark">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 group scroll-reveal"
+          >
+            <div
+              class="w-16 h-16 rounded-2xl bg-armax-blue/10 text-armax-blue flex items-center justify-center text-3xl mb-6 group-hover:bg-armax-blue group-hover:text-white transition-all"
+            >
+              <i class="fas fa-medal"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
+              جودة عالية
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              نختار منتجاتنا بعناية من أفضل المصانع العالمية لنضمن لك أعلى
+              معايير الجودة.
+            </p>
+          </div>
+
+          <div
+            class="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 group scroll-reveal"
+          >
+            <div
+              class="w-16 h-16 rounded-2xl bg-armax-orange/10 text-armax-orange flex items-center justify-center text-3xl mb-6 group-hover:bg-armax-orange group-hover:text-white transition-all"
+            >
+              <i class="fas fa-tags"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
+              أسعار الجملة
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              أسعار تنافسية خاصة لتجار الجملة مع خصومات حصرية على الكميات
+              الكبيرة.
+            </p>
+          </div>
+
+          <div
+            class="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 group scroll-reveal"
+          >
+            <div
+              class="w-16 h-16 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center text-3xl mb-6 group-hover:bg-green-600 group-hover:text-white transition-all"
+            >
+              <i class="fas fa-truck-fast"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
+              توصيل سريع
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              شبكة توصيل واسعة تغطي جميع المناطق مع ضمان وصول طلبك في أسرع وقت.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section
+      id="about"
+      class="py-24 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-armax-darker dark:to-armax-dark relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-1/2 h-full bg-armax-blue/5 -skew-x-12 transform origin-top-right"
+      ></div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="order-2 lg:order-1 scroll-reveal">
+            <div class="relative">
+              <div class="grid grid-cols-2 gap-4">
+                <img
+                  src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400&h=500&fit=crop "
+                  class="rounded-2xl shadow-lg w-full h-64 object-cover transform translate-y-8"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=400&h=500&fit=crop "
+                  class="rounded-2xl shadow-lg w-full h-64 object-cover"
+                />
+              </div>
+              <div
+                class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl text-center"
+              >
+                <div class="text-4xl font-black text-armax-orange mb-1">
+                  15+
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                  سنة خبرة
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-1 lg:order-2 scroll-reveal">
+            <div
+              class="inline-block px-4 py-2 rounded-full bg-armax-blue/10 text-armax-blue font-bold mb-4"
+            >
+              عن الشركة
+            </div>
+            <h2 class="text-4xl font-black text-gray-800 dark:text-white mb-6">
+              نحن أرماكس
+              <span class="block text-armax-orange mt-2"
+                >شريكك الموثوق في الأدوات المنزلية</span
+              >
+            </h2>
+            <p
+              class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed text-lg"
+            >
+              تأسست شركة أرماكس بهدف توفير منتجات منزلية عالية الجودة للتجار
+              والموزعين بأسعار تنافسية. نحن نؤمن بأن النجاح يأتي من خلال تقديم
+              قيمة حقيقية لعملائنا.
+            </p>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              نتعامل مع أكبر المصانع العالمية ونخضع جميع منتجاتنا لاختبارات جودة
+              صارمة. فريقنا متخصص في تلبية احتياجات السوق المحلي مع الحفاظ على
+              أعلى معايير الخدمة.
+            </p>
+
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-6 h-6 rounded-full bg-armax-orange text-white flex items-center justify-center text-sm"
+                >
+                  <i class="fas fa-check"></i>
+                </div>
+                <span class="text-gray-700 dark:text-gray-300 font-bold"
+                  >ضمان جودة على جميع المنتجات</span
+                >
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-6 h-6 rounded-full bg-armax-orange text-white flex items-center justify-center text-sm"
+                >
+                  <i class="fas fa-check"></i>
+                </div>
+                <span class="text-gray-700 dark:text-gray-300 font-bold"
+                  >خدمة عملاء على مدار الساعة</span
+                >
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-6 h-6 rounded-full bg-armax-orange text-white flex items-center justify-center text-sm"
+                >
+                  <i class="fas fa-check"></i>
+                </div>
+                <span class="text-gray-700 dark:text-gray-300 font-bold"
+                  >إمكانية الإرجاع خلال 14 يوم</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section id="offers" class="py-24 bg-armax-blue relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div
+          class="absolute inset-0"
+          style="
+            background-image: repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 35px,
+              rgba(255, 255, 255, 0.1) 35px,
+              rgba(255, 255, 255, 0.1) 70px
+            );
+          "
+        ></div>
+      </div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+            عروض حصرية
+          </h2>
+          <p class="text-blue-100 text-lg">
+            فرصة ذهبية للتجار - أسعار خاصة على الكميات الكبيرة
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:transform hover:scale-105 transition-all duration-300"
+          >
+            <div
+              class="w-20 h-20 rounded-full bg-armax-orange flex items-center justify-center text-4xl text-white mb-6 mx-auto"
+            >
+              <i class="fas fa-percentage"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white text-center mb-4">
+              خصم 25%
+            </h3>
+            <p class="text-blue-100 text-center mb-6">
+              على طلبات تزيد عن 50 ألف ريال
+            </p>
+            <div class="text-center">
+              <span
+                class="inline-block px-6 py-2 rounded-full bg-white text-armax-blue font-bold"
+                >اطلب الآن</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:transform hover:scale-105 transition-all duration-300 relative"
+          >
+            <div
+              class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold"
+            >
+              الأكثر مبيعاً
+            </div>
+            <div
+              class="w-20 h-20 rounded-full bg-armax-orange flex items-center justify-center text-4xl text-white mb-6 mx-auto"
+            >
+              <i class="fas fa-gift"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white text-center mb-4">
+              اشترِ 10 واحصل على 12
+            </h3>
+            <p class="text-blue-100 text-center mb-6">
+              على تشكيلة الأواني المنزلية المحددة
+            </p>
+            <div class="text-center">
+              <span
+                class="inline-block px-6 py-2 rounded-full bg-armax-orange text-white font-bold"
+                >استفد من العرض</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:transform hover:scale-105 transition-all duration-300"
+          >
+            <div
+              class="w-20 h-20 rounded-full bg-armax-orange flex items-center justify-center text-4xl text-white mb-6 mx-auto"
+            >
+              <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white text-center mb-4">
+              توصيل مجاني
+            </h3>
+            <p class="text-blue-100 text-center mb-6">
+              للطلبات داخل المدينة الرئيسية
+            </p>
+            <div class="text-center">
+              <span
+                class="inline-block px-6 py-2 rounded-full bg-white text-armax-blue font-bold"
+                >تعرف على التفاصيل</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-24 bg-gray-50 dark:bg-armax-darker">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <div
+            class="inline-block px-4 py-2 rounded-full bg-armax-orange/10 text-armax-orange font-bold mb-4"
+          >
+            منتجاتنا
+          </div>
+          <h2
+            class="text-4xl md:text-5xl font-black text-gray-800 dark:text-white mb-4"
+          >
+            تشكيلة واسعة من الأدوات المنزلية
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            اختر من بين مئات المنتجات عالية الجودة بأسعار الجملة المنافسة
+          </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+          <button
+            class="filter-btn active px-6 py-2 rounded-full bg-armax-blue text-white font-bold transition-all"
+            data-filter="all"
+          >
+            الكل
+          </button>
+          <button
+            class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold hover:bg-armax-orange hover:text-white transition-all"
+            data-filter="cookware"
+          >
+            أواني الطبخ
+          </button>
+          <button
+            class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold hover:bg-armax-orange hover:text-white transition-all"
+            data-filter="storage"
+          >
+            تخزين وتنظيم
+          </button>
+          <button
+            class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold hover:bg-armax-orange hover:text-white transition-all"
+            data-filter="tools"
+          >
+            أدوات منزلية
+          </button>
+          <button
+            class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold hover:bg-armax-orange hover:text-white transition-all"
+            data-filter="electronics"
+          >
+            أجهزة صغيرة
+          </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" id="productsGrid">
+          <!-- Product 1 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="cookware"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1584990347449-a2d4c2c044c5?w=400&h=400&fit=crop "
+                alt="طقم قدور"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+              <div
+                class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold"
+              >
+                جديد
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                طقم قدور جرانيت 12 قطعة
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                طقم كامل بمقابض باكلايت مقاوم للحرارة
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >1,200 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    850 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 1,
+                      name: 'طقم قدور جرانيت 12 قطعة',
+                      price: 850,
+                      image:
+                        'https://images.unsplash.com/photo-1584990347449-a2d4c2c044c5?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="storage"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&h=400&fit=crop "
+                alt="حافظات طعام"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+              <div
+                class="absolute top-4 right-4 bg-armax-orange text-white px-3 py-1 rounded-full text-sm font-bold"
+              >
+                الأكثر مبيعاً
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                طقم حافظات طعام 24 قطعة
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                بلاستيك آمن للطعام مع أغطية محكمة
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >350 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    220 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 2,
+                      name: 'طقم حافظات طعام 24 قطعة',
+                      price: 220,
+                      image:
+                        'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="tools"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&h=400&fit=crop "
+                alt="أدوات مطبخ"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                طقم أدوات مطبخ 15 قطعة
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                سليكون عالي الجودة مقاوم للحرارة
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >180 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    120 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 3,
+                      name: 'طقم أدوات مطبخ 15 قطعة',
+                      price: 120,
+                      image:
+                        'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 4 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="electronics"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop "
+                alt="خلاط كهربائي"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+              <div
+                class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold"
+              >
+                متاح
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                خلاط كهربائي 1000 واط
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                5 سرعات مع إبريق زجاجي سعة 1.5 لتر
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >450 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    320 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 4,
+                      name: 'خلاط كهربائي 1000 واط',
+                      price: 320,
+                      image:
+                        'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 5 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="cookware"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=400&fit=crop "
+                alt="مقلاة جرانيت"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                مقلاة جرانيت عميقة 28سم
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                غير لاصقة مع غطاء زجاجي
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >150 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    95 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 5,
+                      name: 'مقلاة جرانيت عميقة 28سم',
+                      price: 95,
+                      image:
+                        'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 6 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="storage"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400&h=400&fit=crop "
+                alt="منظم خزانة"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                منظم خزانة 3 أدوار
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                بلاستيك متين مع عجلات للحركة
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >200 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    140 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 6,
+                      name: 'منظم خزانة 3 أدوار',
+                      price: 140,
+                      image:
+                        'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 7 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="tools"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1605218427306-022ba6c5544f?w=400&h=400&fit=crop "
+                alt="سكاكين"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+              <div
+                class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold"
+              >
+                خصم 30%
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                طقم سكاكين 8 قطع
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                ستيل الماني مع حامل خشبي
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >280 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    195 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 7,
+                      name: 'طقم سكاكين 8 قطع',
+                      price: 195,
+                      image:
+                        'https://images.unsplash.com/photo-1605218427306-022ba6c5544f?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 8 -->
+          <div
+            class="product-card bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl scroll-reveal"
+            data-category="electronics"
+          >
+            <div class="relative overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1544233726-9f1d2b27be8b?w=400&h=400&fit=crop "
+                alt="غلاية كهربائية"
+                class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                غلاية كهربائية 1.8 لتر
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                ستانلس ستيل مع إغلاق آلي
+              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm text-gray-400 line-through"
+                    >120 ر.س</span
+                  >
+                  <div class="text-2xl font-black text-armax-orange">
+                    85 ر.س
+                  </div>
+                </div>
+                <button
+                  onclick="
+                    addToCart({
+                      id: 8,
+                      name: 'غلاية كهربائية 1.8 لتر',
+                      price: 85,
+                      image:
+                        'https://images.unsplash.com/photo-1544233726-9f1d2b27be8b?w=400&h=400&fit=crop',
+                    })
+                  "
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center hover:bg-armax-lightBlue transition-colors"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-12">
+          <button
+            class="px-8 py-4 rounded-full border-2 border-armax-blue text-armax-blue dark:text-white dark:border-white font-bold text-lg hover:bg-armax-blue hover:text-white transition-all"
+          >
+            عرض المزيد من المنتجات
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white dark:bg-armax-dark relative">
+      <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-16">
+          <!-- Contact Info -->
+          <div class="scroll-reveal">
+            <div
+              class="inline-block px-4 py-2 rounded-full bg-armax-blue/10 text-armax-blue font-bold mb-4"
+            >
+              تواصل معنا
+            </div>
+            <h2 class="text-4xl font-black text-gray-800 dark:text-white mb-6">
+              نحن هنا لمساعدتك
+              <span class="block text-armax-orange mt-2">تواصل معنا الآن</span>
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              لديك استفسار؟ نحن جاهزون للإجابة على جميع أسئلتك. فريق خدمة
+              العملاء لدينا متواجد على مدار الساعة لمساعدتك.
+            </p>
+
+            <div class="space-y-6">
+              <div
+                class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-armax-blue text-white flex items-center justify-center text-xl shrink-0"
+                >
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800 dark:text-white mb-1">
+                    العنوان
+                  </h4>
+                  <p class="text-gray-600 dark:text-gray-400">
+                    المنطقة الصناعية، شارع الملك فهد، الرياض، المملكة العربية
+                    السعودية
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-armax-orange text-white flex items-center justify-center text-xl shrink-0"
+                >
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800 dark:text-white mb-1">
+                    الهاتف
+                  </h4>
+                  <p class="text-gray-600 dark:text-gray-400" dir="ltr">
+                    +966 50 123 4567
+                  </p>
+                  <p class="text-gray-600 dark:text-gray-400" dir="ltr">
+                    +966 11 234 5678
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl shrink-0"
+                >
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800 dark:text-white mb-1">
+                    البريد الإلكتروني
+                  </h4>
+                  <p class="text-gray-600 dark:text-gray-400">info@armax.com</p>
+                  <p class="text-gray-600 dark:text-gray-400">
+                    sales@armax.com
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="scroll-reveal">
+            <form
+              id="contactForm"
+              class="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-3xl shadow-xl"
+            >
+              <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                اترك رسالتك
+              </h3>
+
+              <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label
+                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                    >الاسم الكامل</label
+                  >
+                  <input
+                    type="text"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all"
+                    placeholder="أدخل اسمك"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                    >رقم الهاتف</label
+                  >
+                  <input
+                    type="tel"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all"
+                    placeholder="05xxxxxxxx"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label
+                  class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                  >البريد الإلكتروني</label
+                >
+                <input
+                  type="email"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all"
+                  placeholder="example@email.com"
+                  required
+                />
+              </div>
+
+              <div class="mb-6">
+                <label
+                  class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                  >الرسالة</label
+                >
+                <textarea
+                  rows="5"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all resize-none"
+                  placeholder="اكتب رسالتك هنا..."
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-4 rounded-xl bg-armax-blue text-white font-bold text-lg hover:bg-armax-lightBlue transition-all transform hover:scale-[1.02] shadow-lg"
+              >
+                إرسال الرسالة
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="bg-armax-blue dark:bg-armax-darker text-white pt-20 pb-8 relative overflow-hidden"
+    >
+      <div class="absolute inset-0 opacity-5">
+        <div
+          class="absolute inset-0"
+          style="
+            background-image: radial-gradient(
+              circle at 2px 2px,
+              white 1px,
+              transparent 0
+            );
+            background-size: 40px 40px;
+          "
+        ></div>
+      </div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          <!-- Company Info -->
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <img
+                src="logo.jpeg"
+                alt="Armax"
+                class="w-16 object-cover rounded-full bg-white p-1"
+              />
+              <div>
+                <div class="text-2xl font-black">أرماكس</div>
+                <div class="text-armax-orange text-sm">ARMAX</div>
+              </div>
+            </div>
+            <p class="text-blue-100 mb-6 leading-relaxed">
+              شركة رائدة في تجارة الأدوات المنزلية بالجملة، نقدم منتجات عالية
+              الجودة بأسعار تنافسية للتجار والموزعين.
+            </p>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-armax-orange transition-colors"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-armax-orange transition-colors"
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-armax-orange transition-colors"
+              >
+                <i class="fab fa-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h4
+              class="text-xl font-bold mb-6 border-r-4 border-armax-orange pr-4"
+            >
+              روابط سريعة
+            </h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#home"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> الرئيسية</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#about"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> عن الشركة</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#products"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> المنتجات</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> تواصل معنا</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Categories -->
+          <div>
+            <h4
+              class="text-xl font-bold mb-6 border-r-4 border-armax-orange pr-4"
+            >
+              الأقسام
+            </h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> أواني الطبخ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> التخزين
+                  والتنظيم</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> الأدوات
+                  المنزلية</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                  ><i class="fas fa-chevron-left text-xs"></i> الأجهزة
+                  الصغيرة</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Empty Column for balance -->
+          <div></div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div
+          class="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <p class="text-blue-200 text-sm">
+            © 2026 أرماكس. جميع الحقوق محفوظة.
+          </p>
+          <div class="flex gap-6 text-sm text-blue-200">
+            <a href="#" class="hover:text-white transition-colors"
+              >سياسة الخصوصية</a
+            >
+            <a href="#" class="hover:text-white transition-colors"
+              >الشروط والأحكام</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Cart Sidebar - New Addition -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+      <div
+        class="cart-header p-6 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50"
+      >
+        <h2
+          class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <i class="fas fa-shopping-cart text-armax-orange"></i>
+          سلة التسوق
+        </h2>
+        <button
+          onclick="toggleCart()"
+          class="w-8 h-8 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+        >
+          <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
+        </button>
+      </div>
+
+      <div class="cart-items flex-1 overflow-y-auto p-4" id="cartItems">
+        <div class="cart-empty text-center py-12 text-gray-400">
+          <i class="fas fa-shopping-basket text-6xl mb-4 opacity-30"></i>
+          <h3 class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">
+            السلة فارغة
+          </h3>
+          <p class="text-sm">ابدأ التسوق واضف منتجاتك هنا</p>
+        </div>
+      </div>
+
+      <div
+        class="cart-footer p-6 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 hidden"
+        id="cartFooter"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-gray-600 dark:text-gray-300 font-bold"
+            >الإجمالي:</span
+          >
+          <span class="text-2xl font-black text-armax-orange" id="cartTotal"
+            >0 ر.س</span
+          >
+        </div>
+        <button
+          onclick="checkout()"
+          class="w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold transition-all flex items-center justify-center gap-2"
+        >
+          <i class="fab fa-whatsapp"></i>
+          إتمام الطلب عبر واتساب
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-armax-blue text-white px-6 py-3 rounded-full shadow-xl z-50 translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3"
+    >
+      <i class="fas fa-check-circle text-armax-orange"></i>
+      <span id="toastMessage">تمت العملية بنجاح</span>
+    </div>
+
+    <script>
+      // ==========================================
+      // Cart System Configuration
+      // ==========================================
+      const WHAPI_CONFIG = {
+        apiToken: "PUT_YOUR_TOKEN_HERE", // ضع التوكن هنا من Whapi.Cloud
+        recipientNumber: "966500000000", // غير الرقم برقمك مع كود الدولة
+        apiUrl: "https://gate.whapi.cloud/messages/text",
+      };
+
+      // ==========================================
+      // Cart State
+      // ==========================================
+      let cart = JSON.parse(localStorage.getItem("armax_cart")) || [];
+      let cartTotal = 0;
+
+      // ==========================================
+      // UI Functions
+      // ==========================================
+      function toggleCart() {
+        const sidebar = document.getElementById("cartSidebar");
+        const overlay = document.getElementById("cartOverlay");
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+          document.body.style.overflow = "hidden";
+        } else {
+          document.body.style.overflow = "";
+        }
+      }
+
+      function updateCartUI() {
+        const cartItems = document.getElementById("cartItems");
+        const cartFooter = document.getElementById("cartFooter");
+        const cartCount = document.getElementById("cartCount");
+        const cartTotalEl = document.getElementById("cartTotal");
+
+        // Update counter
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+
+        if (totalItems > 0) {
+          cartCount.classList.remove("scale-0");
+          cartCount.classList.add("scale-100");
+        } else {
+          cartCount.classList.remove("scale-100");
+          cartCount.classList.add("scale-0");
+        }
+
+        // Empty state
+        if (cart.length === 0) {
+          cartItems.innerHTML = `
+            <div class="cart-empty text-center py-12 text-gray-400">
+              <i class="fas fa-shopping-basket text-6xl mb-4 opacity-30"></i>
+              <h3 class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">السلة فارغة</h3>
+              <p class="text-sm">ابدأ التسوق واضف منتجاتك هنا</p>
+            </div>
+          `;
+          cartFooter.classList.add("hidden");
+          return;
+        }
+
+        // Render items
+        cartItems.innerHTML = cart
+          .map(
+            (item, index) => `
+          <div class="cart-item flex gap-4 p-4 rounded-xl mb-3 bg-white dark:bg-gray-800 shadow-sm border dark:border-gray-700">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-800 dark:text-white text-sm mb-1">${item.name}</h4>
+              <div class="text-armax-orange font-bold mb-2">${item.price} ر.س</div>
+              <div class="flex items-center gap-2">
+                <button onclick="updateQuantity(${index}, -1)" class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-armax-blue hover:text-white transition-colors text-xs">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <span class="text-sm font-bold w-4 text-center dark:text-white">${item.quantity}</span>
+                <button onclick="updateQuantity(${index}, 1)" class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-armax-blue hover:text-white transition-colors text-xs">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-red-500 transition-colors self-start">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        `,
+          )
+          .join("");
+
+        // Calculate total
+        cartTotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0,
+        );
+        cartTotalEl.textContent = cartTotal + " ر.س";
+        cartFooter.classList.remove("hidden");
+
+        // Save to localStorage
+        localStorage.setItem("armax_cart", JSON.stringify(cart));
+      }
+
+      function addToCart(product) {
+        const existingIndex = cart.findIndex((item) => item.id === product.id);
+
+        if (existingIndex > -1) {
+          cart[existingIndex].quantity += 1;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1,
+          });
+        }
+
+        updateCartUI();
+        showToast("تم إضافة المنتج إلى السلة");
+
+        // Animate cart icon
+        const cartBtn =
+          document.querySelector(".fa-shopping-cart").parentElement;
+        gsap.fromTo(
+          cartBtn,
+          { scale: 0.8 },
+          { scale: 1, duration: 0.3, ease: "back.out(1.7)" },
+        );
+      }
+
+      function updateQuantity(index, change) {
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+        updateCartUI();
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+        showToast("تم حذف المنتج من السلة");
+      }
+
+      function clearCart() {
+        cart = [];
+        updateCartUI();
+        localStorage.removeItem("armax_cart");
+      }
+
+      // ==========================================
+      // Checkout via WhatsApp
+      // ==========================================
+      async function checkout() {
+        if (!cart || cart.length === 0) return;
+
+        const cartData = {
+          items: cart,
+          total: cartTotal,
+          date: new Date().toLocaleString("ar-SA"),
+        };
+
+        const messageText = formatCartMessage(cartData);
+
+        try {
+          // Try sending via API first
+          await sendWhatsAppMessage(messageText);
+          showToast("تم إرسال طلبك بنجاح عبر واتساب!");
+          clearCart();
+          toggleCart();
+        } catch (error) {
+          console.error("API Error:", error);
+          // Fallback to WhatsApp Web
+          fallbackToWhatsApp(cartData);
+        }
+      }
+
+      function formatCartMessage(data) {
+        let itemsText = data.items
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item.name} - ${item.quantity} × ${item.price} ر.س`,
+          )
+          .join("\n");
+
+        return `🛒 *طلب جديد من موقع أرماكس*
+
+📦 *المنتجات:*
+${itemsText}
+
+💰 *الإجمالي:* ${data.total} ر.س
+🕐 *تاريخ الطلب:* ${data.date}
+
+يرجى تأكيد الطلب`;
+      }
+
+      async function sendWhatsAppMessage(text) {
+        const response = await fetch(WHAPI_CONFIG.apiUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${WHAPI_CONFIG.apiToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: WHAPI_CONFIG.recipientNumber,
+            body: text,
+            preview_url: false,
+          }),
+        });
+
+        if (!response.ok) throw new Error("فشل إرسال الرسالة");
+        return await response.json();
+      }
+
+      function fallbackToWhatsApp(data) {
+        const message = encodeURIComponent(formatCartMessage(data));
+        window.open(
+          `https://wa.me/${WHAPI_CONFIG.recipientNumber}?text=${message}`,
+          "_blank",
+        );
+      }
+
+      // ==========================================
+      // Original Site Functions
+      // ==========================================
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.getElementById("loader").style.opacity = "0";
+          setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+          }, 500);
+        }, 1000);
+
+        // Initialize cart
+        updateCartUI();
+      });
+
+      function toggleDarkMode() {
+        document.documentElement.classList.toggle("dark");
+        localStorage.setItem(
+          "darkMode",
+          document.documentElement.classList.contains("dark"),
+        );
+      }
+
+      if (localStorage.getItem("darkMode") === "true") {
+        document.documentElement.classList.add("dark");
+      }
+
+      function toggleMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("hidden");
+      }
+
+      function toggleLanguage() {
+        showToast("سيتم دعم اللغة الإنجليزية قريباً");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+        toastMessage.textContent = message;
+        toast.classList.remove("translate-y-20", "opacity-0");
+        setTimeout(() => {
+          toast.classList.add("translate-y-20", "opacity-0");
+        }, 3000);
+      }
+
+      // Product Filter
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".filter-btn").forEach((b) => {
+            b.classList.remove("bg-armax-blue", "text-white");
+            b.classList.add(
+              "bg-white",
+              "dark:bg-gray-800",
+              "text-gray-700",
+              "dark:text-gray-300",
+            );
+          });
+          this.classList.remove(
+            "bg-white",
+            "dark:bg-gray-800",
+            "text-gray-700",
+            "dark:text-gray-300",
+          );
+          this.classList.add("bg-armax-blue", "text-white");
+
+          const filter = this.getAttribute("data-filter");
+          const products = document.querySelectorAll(".product-card");
+
+          products.forEach((product) => {
+            if (
+              filter === "all" ||
+              product.getAttribute("data-category") === filter
+            ) {
+              product.style.display = "block";
+              gsap.fromTo(
+                product,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.4 },
+              );
+            } else {
+              product.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Contact Form
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          showToast("تم إرسال رسالتك بنجاح! سنتواصل معك قريباً");
+          this.reset();
+        });
+
+      // GSAP Animations
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray(".scroll-reveal").forEach((element, i) => {
+        gsap.fromTo(
+          element,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: i * 0.1,
+            scrollTrigger: {
+              trigger: element,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+      });
+
+      let lastScroll = 0;
+      window.addEventListener("scroll", () => {
+        const navbar = document.getElementById("navbar");
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+          navbar.classList.add("shadow-lg");
+        } else {
+          navbar.classList.remove("shadow-lg");
+        }
+        lastScroll = currentScroll;
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            document.getElementById("mobileMenu").classList.add("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

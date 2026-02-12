@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aramex - المنتجات المنزلية بالجملة في السعودية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-content">
+          <div class="top-bar-left">
+            <div class="top-bar-item">
+              <i class="fas fa-phone"></i>
+              <span>9200XXXXX</span>
+            </div>
+            <div class="top-bar-item">
+              <i class="fas fa-envelope"></i>
+              <span>info@aramex-ksa.com</span>
+            </div>
+            <div class="top-bar-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </div>
+          </div>
+          <div class="top-bar-right">
+            <div class="lang-switch" onclick="toggleLanguage()">
+              <i class="fas fa-globe"></i>
+              <span>English</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header" id="header">
+      <div class="container">
+        <div class="header-content">
+          <a href="#" class="logo">
+            <div class="logo-icon">أ</div>
+            <div class="logo-text">
+              <span class="logo-main">Aramex</span>
+              <span class="logo-sub">المنتجات المنزلية بالجملة</span>
+            </div>
+          </a>
+
+          <nav>
+            <ul class="main-nav">
+              <li><a href="#home" class="nav-link">الرئيسية</a></li>
+              <li><a href="#products" class="nav-link">المتجر</a></li>
+              <li><a href="#categories" class="nav-link">الأقسام</a></li>
+              <li><a href="#about" class="nav-link">من نحن</a></li>
+              <li><a href="#contact" class="nav-link">اتصل بنا</a></li>
+            </ul>
+          </nav>
+
+          <div class="header-actions">
+            <button class="search-btn" onclick="toggleSearch()">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="cart-btn" onclick="toggleCart()">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-bg"></div>
+      <div class="hero-particles" id="particles"></div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="fas fa-star"></i>
+            <span>المورد الرائد للمنتجات المنزلية بالجملة</span>
+          </div>
+          <h1 class="hero-title">
+            منتجات منزلية <span>عالية الجودة</span> بأسعار الجملة التنافسية
+          </h1>
+          <p class="hero-description">
+            نقدم لك تشكيلة واسعة من المنتجات المنزلية والأدوات والألعاب والهدايا
+            بأسعار الجملة المميزة. مورد موثوق للمحلات التجارية والمشاريع في جميع
+            أنحاء المملكة.
+          </p>
+          <div class="hero-cta">
+            <a href="#products" class="btn btn-secondary">
+              <i class="fas fa-shopping-bag"></i>
+              تسوق الآن
+            </a>
+            <a
+              href="#contact"
+              class="btn btn-outline"
+              style="border-color: white; color: white"
+            >
+              <i class="fas fa-phone"></i>
+              اطلب عرض سعر
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">+5000</span>
+              <span class="stat-label">منتج متنوع</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">+1200</span>
+              <span class="stat-label">عميل سعيد</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">15+</span>
+              <span class="stat-label">سنة خبرة</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=800&auto=format&fit=crop"
+          alt="Household Products"
+        />
+      </div>
+    </section>
+
+    <!-- Features Bar -->
+    <section class="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div class="feature-content">
+              <h3>توصيل سريع</h3>
+              <p>شحن سريع وموثوق لجميع مناطق المملكة خلال 3-5 أيام عمل</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-tags"></i>
+            </div>
+            <div class="feature-content">
+              <h3>أسعار الجملة</h3>
+              <p>أفضل الأسعار التنافسية للكميات الكبيرة والمشاريع التجارية</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="feature-content">
+              <h3>جودة مضمونة</h3>
+              <p>منتجات مختارة بعناية فائقة من أفضل المصنعين العالميين</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i class="fas fa-headset"></i>
+            </div>
+            <div class="feature-content">
+              <h3>دعم متميز</h3>
+              <p>فريق خدمة عملاء متخصص لمساعدتك على مدار الساعة</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">تصفح حسب القسم</h2>
+          <p class="section-subtitle">
+            اكتشف تشكيلتنا الواسعة من المنتجات المنزلية عالية الجودة
+          </p>
+        </div>
+        <div class="categories-grid">
+          <div class="category-card" onclick="filterProducts('kitchen')">
+            <div class="category-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <h3 class="category-name">أدوات المطبخ</h3>
+            <span class="category-count">+800 منتج</span>
+          </div>
+          <div class="category-card" onclick="filterProducts('cleaning')">
+            <div class="category-icon">
+              <i class="fas fa-broom"></i>
+            </div>
+            <h3 class="category-name">منتجات التنظيف</h3>
+            <span class="category-count">+650 منتج</span>
+          </div>
+          <div class="category-card" onclick="filterProducts('tools')">
+            <div class="category-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h3 class="category-name">أدوات منزلية</h3>
+            <span class="category-count">+520 منتج</span>
+          </div>
+          <div class="category-card" onclick="filterProducts('toys')">
+            <div class="category-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <h3 class="category-name">ألعاب وهدايا</h3>
+            <span class="category-count">+1200 منتج</span>
+          </div>
+          <div class="category-card" onclick="filterProducts('gifts')">
+            <div class="category-icon">
+              <i class="fas fa-gift"></i>
+            </div>
+            <h3 class="category-name">هدايا وتغليف</h3>
+            <span class="category-count">+430 منتج</span>
+          </div>
+          <div class="category-card" onclick="filterProducts('home')">
+            <div class="category-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <h3 class="category-name">مستلزمات المنزل</h3>
+            <span class="category-count">+1400 منتج</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+      <div class="container">
+        <div class="products-header">
+          <div>
+            <h2 class="section-title">المنتجات الأكثر مبيعاً</h2>
+            <p class="section-subtitle">
+              منتجاتنا المميزة بأسعار الجملة المنافسة
+            </p>
+          </div>
+          <a href="#" class="btn btn-outline">عرض جميع المنتجات</a>
+        </div>
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+      <div class="container">
+        <div class="about-content">
+          <div class="about-image">
+            <div class="about-image-accent"></div>
+            <div class="about-image-main">
+              <img
+                src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&auto=format&fit=crop"
+                alt="Aramex Warehouse"
+              />
+            </div>
+            <div class="about-stats-float">
+              <span class="number">15+</span>
+              <span class="label">سنوات من الخبرة</span>
+            </div>
+          </div>
+          <div class="about-text">
+            <h2>Aramex.. شريكك الموثوق في تجارة الجملة</h2>
+            <p>
+              نحن شركة رائدة في مجال توفير المنتجات المنزلية بالجملة في المملكة
+              العربية السعودية. منذ تأسيسنا، نسعى جاهدين لتقديم منتجات عالية
+              الجودة بأسعار تنافسية لدعم نمو تجارتك.
+            </p>
+            <p>
+              نتميز بعلاقات قوية مع أفضل المصنعين العالميين، مما يضمن لك الحصول
+              على أحدث المنتجات بأفضل الأسعار. نخدم أكثر من 1200 عميل في جميع
+              أنحاء المملكة من المحلات التجارية والهايبرماركت والمشاريع الناشئة.
+            </p>
+            <div class="about-features">
+              <div class="about-feature">
+                <i class="fas fa-check"></i>
+                <span>منتجات عالية الجودة معتمدة من الهيئات السعودية</span>
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check"></i>
+                <span
+                  >أسعار الجملة التنافسية مع خصومات على الكميات الكبيرة</span
+                >
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check"></i>
+                <span>خدمة عملاء متميزة واستشارات مجانية للمشاريع</span>
+              </div>
+              <div class="about-feature">
+                <i class="fas fa-check"></i>
+                <span>ضمان استبدال واسترجاع على جميع المنتجات</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">آراء عملائنا</h2>
+          <p class="section-subtitle">
+            نفخر بثقة أكثر من 1200 عميل في جميع أنحاء المملكة
+          </p>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              "تعاملت مع Aramex لأكثر من 5 سنوات، وهم دائماً يقدمون أفضل الأسعار
+              وأعلى جودة. خدمة التوصيل سريعة والمنتجات دائماً تلبي توقعات
+              عملائي. أنصح بهم بشدة لأي صاحب محل."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">ع</div>
+              <div class="author-info">
+                <h4>عبدالرحمن الفهد</h4>
+                <span>صاحب محل أدوات منزلية - الرياض</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              "جودة المنتجات ممتازة والأسعار لا تُنافس. فريق العمل محترف جداً
+              ويساعدني في اختيار المنتجات الأكثر مبيعاً. زادت مبيعات محلي بنسبة
+              40% منذ تعاملي معهم."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">م</div>
+              <div class="author-info">
+                <h4>محمد الشمري</h4>
+                <span>صاحب هايبرماركت - جدة</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <p class="testimonial-text">
+              "مورد موثوق ومحترف. أنصح كل من يبحث عن منتجات منزلية بالجملة
+              بالتعامل مع Aramex. نظام الطلب سهل والدفع آمن والشحن سريع جداً."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">س</div>
+              <div class="author-info">
+                <h4>سعد العتيبي</h4>
+                <span>مؤسس متجر إلكتروني - الدمام</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <div class="contact-content">
+          <div class="contact-info">
+            <h2>تواصل معنا الآن</h2>
+            <p>
+              هل لديك استفسار أو ترغب في طلب عرض سعر خاص؟ فريقنا جاهز لمساعدتك
+              على مدار الساعة. تواصل معنا عبر الواتساب أو املأ النموذج وسنقوم
+              بالرد عليك في أقرب وقت.
+            </p>
+
+            <div class="contact-methods">
+              <div class="contact-method">
+                <div class="method-icon">
+                  <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="method-details">
+                  <h3>واتساب</h3>
+                  <p>+966 50 XXX XXXX</p>
+                </div>
+              </div>
+              <div class="contact-method">
+                <div class="method-icon">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div class="method-details">
+                  <h3>الهاتف</h3>
+                  <p>9200XXXXX</p>
+                </div>
+              </div>
+              <div class="contact-method">
+                <div class="method-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="method-details">
+                  <h3>البريد الإلكتروني</h3>
+                  <p>info@aramex-ksa.com</p>
+                </div>
+              </div>
+              <div class="contact-method">
+                <div class="method-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="method-details">
+                  <h3>العنوان</h3>
+                  <p>الرياض، حي الرياض، طريق الملك فهد</p>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="https://wa.me/966500000000"
+              class="whatsapp-btn"
+              target="_blank"
+            >
+              <i class="fab fa-whatsapp"></i>
+              تواصل معنا عبر واتساب
+            </a>
+          </div>
+
+          <form class="contact-form" id="contactForm">
+            <h3
+              style="
+                margin-bottom: 24px;
+                font-size: 1.5rem;
+                color: var(--text-dark);
+              "
+            >
+              اطلب عرض سعر
+            </h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="customerName" placeholder="محمد أحمد" required />
+              </div>
+              <div class="form-group">
+                <label>رقم الجوال</label>
+                <input type="tel" id="customerPhone" placeholder="05XXXXXXXX" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>البريد الإلكتروني</label>
+              <input type="email" id="customerEmail" placeholder="example@email.com" />
+            </div>
+            <div class="form-group">
+              <label>نوع النشاط التجاري</label>
+              <select id="businessType" required>
+                <option value="">اختر النشاط</option>
+                <option value="store">محل تجاري</option>
+                <option value="hypermarket">هايبرماركت</option>
+                <option value="online">متجر إلكتروني</option>
+                <option value="project">مشروع جديد</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>المنتجات المطلوبة والكميات</label>
+              <textarea
+                rows="4"
+                placeholder="اكتب تفاصيل طلبك هنا..."
+                required
+                id="orderDetails"
+              ></textarea>
+            </div>
+            <button id="submitBtn" type="submit" class="submit-btn">
+              <i class="fas fa-paper-plane"></i>
+              إرسال الطلب
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <a href="#" class="logo">
+              <div class="logo-icon">أ</div>
+              <div class="logo-text">
+                <span class="logo-main">Aramex</span>
+                <span class="logo-sub">المنتجات المنزلية بالجملة</span>
+              </div>
+            </a>
+            <p>
+              شركة رائدة في مجال توفير المنتجات المنزلية بالجملة في المملكة
+              العربية السعودية. نقدم منتجات عالية الجودة بأسعار تنافسية لدعم نمو
+              تجارتك.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>روابط سريعة</h3>
+            <ul class="footer-links">
+              <li><a href="#home">الرئيسية</a></li>
+              <li><a href="#products">المتجر</a></li>
+              <li><a href="#categories">الأقسام</a></li>
+              <li><a href="#about">من نحن</a></li>
+              <li><a href="#contact">اتصل بنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>الأقسام</h3>
+            <ul class="footer-links">
+              <li><a href="#">أدوات المطبخ</a></li>
+              <li><a href="#">منتجات التنظيف</a></li>
+              <li><a href="#">ألعاب وهدايا</a></li>
+              <li><a href="#">أدوات منزلية</a></li>
+              <li><a href="#">مستلزمات المنزل</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>النشرة البريدية</h3>
+            <p
+              style="
+                color: rgba(255, 255, 255, 0.7);
+                margin-bottom: 16px;
+                font-size: 14px;
+              "
+            >
+              اشترك للحصول على أحدث العروض والمنتجات الجديدة
+            </p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="بريدك الإلكتروني" />
+              <button type="submit">اشتراك</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>جميع الحقوق محفوظة © 2026 Aramex</p>
+          <div class="payment-methods">
+            <i class="fab fa-cc-visa" title="Visa"></i>
+            <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+            <i class="fab fa-cc-paypal" title="PayPal"></i>
+            <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h2>
+          <i class="fas fa-shopping-cart"></i>
+          سلة التسوق
+        </h2>
+        <button class="close-cart" onclick="toggleCart()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty">
+          <i class="fas fa-shopping-basket"></i>
+          <h3>السلة فارغة</h3>
+          <p>ابدأ التسوق واضف منتجاتك هنا</p>
+        </div>
+      </div>
+      <div class="cart-footer" id="cartFooter" style="display: none">
+        <div class="cart-total">
+          <span>الإجمالي:</span>
+          <span id="cartTotal">0 ر.س</span>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">
+          <i class="fas fa-check"></i>
+          إتمام الطلب عبر واتساب
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+      <button class="close-search" onclick="toggleSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="ابحث عن منتج..."
+            id="searchInput"
+          />
+          <button class="search-close" onclick="toggleSearch()">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="successToast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMessage">تمت الإضافة للسلة بنجاح</span>
+    </div>
+    <script>
+      // ==========================================
+      // إعدادات WhatsApp API (Whapi.Cloud)
+      // ==========================================
+    if (typeof WHAPI_CONFIG === "undefined") {
+  const WHAPI_CONFIG = {
+    apiToken: "PUT_YOUR_TOKEN_HERE",
+    recipientNumber: "966571805775",
+    apiUrl: "https://gate.whapi.cloud/messages/text",
+  };
+}
+
+
+      // ==========================================
+      // معالجة إرسال النموذج
+      // ==========================================
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+          const originalText = submitBtn.innerHTML;
+
+          // تفعيل حالة التحميل
+          submitBtn.classList.add("btn-loading");
+          submitBtn.innerHTML = "جاري الإرسال...";
+
+          try {
+            // جمع البيانات
+            const formData = {
+              name: document.getElementById("customerName").value.trim(),
+              phone: document.getElementById("customerPhone").value.trim(),
+              email:
+                document.getElementById("customerEmail").value.trim() ||
+                "غير محدد",
+              business: document.getElementById("businessType").value,
+              details: document.getElementById("orderDetails").value.trim(),
+              date: new Date().toLocaleString("ar-SA"),
+            };
+
+            // تحقق من وجود بيانات ضرورية
+            if (
+              !formData.name ||
+              !formData.phone ||
+              !formData.business ||
+              !formData.details
+            ) {
+              alert("يرجى ملء جميع الحقول المطلوبة!");
+              return;
+            }
+
+            // تجهيز نص الرسالة
+            const messageText = formatWhatsAppMessage(formData);
+
+            // إرسال الرسالة عبر API
+            await sendWhatsAppMessage(messageText);
+
+            // عرض رسالة النجاح
+            showNotification("تم إرسال طلبك بنجاح! سنتواصل معك قريباً");
+
+            // إعادة تعيين النموذج
+            this.reset();
+          } catch (error) {
+            console.error("Error:", error);
+            // خطة بديلة: فتح واتساب كخطة احتياطية
+            fallbackToWhatsApp({
+              name: document.getElementById("customerName").value,
+              phone: document.getElementById("customerPhone").value,
+              email: document.getElementById("customerEmail").value,
+              business: document.getElementById("businessType").value,
+              details: document.getElementById("orderDetails").value,
+              date: new Date().toLocaleString("ar-SA"),
+            });
+          } finally {
+            // إعادة الزر لحالته الطبيعية
+            submitBtn.classList.remove("btn-loading");
+            submitBtn.innerHTML = originalText;
+          }
+        });
+
+      // تنسيق رسالة واتساب
+      function formatWhatsAppMessage(data) {
+        return `🛒 *طلب جديد من موقع Aramex*
+
+👤 *العميل:* ${data.name}
+📱 *الجوال:* ${data.phone}
+📧 *البريد:* ${data.email}
+🏪 *النشاط التجاري:* ${data.business}
+🕐 *تاريخ الطلب:* ${data.date}
+
+📝 *تفاصيل الطلب:*
+${data.details}
+
+---
+تم الإرسال تلقائياً من الموقع الإلكتروني`;
+      }
+
+      // إرسال الرسالة عبر Whapi.Cloud API
+      async function sendWhatsAppMessage(text) {
+        const response = await fetch(WHAPI_CONFIG.apiUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${WHAPI_CONFIG.apiToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: WHAPI_CONFIG.recipientNumber,
+            body: text,
+            preview_url: false,
+          }),
+        });
+
+        if (!response.ok) throw new Error("فشل إرسال الرسالة عبر API");
+        return await response.json();
+      }
+
+      // خطة بديلة: فتح واتساب ويب إذا فشل API
+      function fallbackToWhatsApp(data) {
+        const message = encodeURIComponent(formatWhatsAppMessage(data));
+        const whatsappUrl = `https://wa.me/${WHAPI_CONFIG.recipientNumber}?text=${message}`;
+        window.open(whatsappUrl, "_blank");
+      }
+
+      // عرض إشعار النجاح
+      function showNotification(msg) {
+        const toast = document.getElementById("successToast");
+        toast.querySelector("span").textContent = msg;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 5000);
+      }
+
+      // ==========================================
+      // دوال سلة التسوق والدفع عبر WhatsApp
+      // ==========================================
+      async function checkout() {
+        if (!cart || cart.length === 0) return;
+
+        const cartData = {
+          items: cart,
+          total: cartTotal,
+          date: new Date().toLocaleString("ar-SA"),
+        };
+
+        const messageText = formatCartMessage(cartData);
+
+        try {
+          await sendWhatsAppMessage(messageText);
+          showCartNotification();
+          clearCart();
+        } catch (error) {
+          fallbackToCartWhatsApp(cartData);
+        }
+      }
+
+      function formatCartMessage(data) {
+        let itemsText = data.items
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item.name} - ${item.quantity} × ${item.price} ر.س`,
+          )
+          .join("\n");
+
+        return `🛒 *طلب جديد من سلة التسوق*
+
+📦 *المنتجات:*
+${itemsText}
+
+💰 *الإجمالي:* ${data.total} ر.س
+🕐 *تاريخ الطلب:* ${data.date}
+
+يرجى تأكيد الطلب`;
+      }
+
+      function showCartNotification() {
+        const toast = document.getElementById("successToast");
+        toast.innerHTML =
+          '<i class="fas fa-check-circle"></i><span>تم إرسال طلبك عبر واتساب بنجاح!</span>';
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 5000);
+      }
+
+      function fallbackToCartWhatsApp(data) {
+        const message = encodeURIComponent(formatCartMessage(data));
+        window.open(
+          `https://wa.me/${WHAPI_CONFIG.recipientNumber}?text=${message}`,
+          "_blank",
+        );
+      }
+    </script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
