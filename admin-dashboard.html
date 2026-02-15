@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم | أرماكس</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              armax: {
+                blue: "#003B6D",
+                lightBlue: "#0056A3",
+                orange: "#FF8C42",
+                lightOrange: "#FFA726",
+                dark: "#0F172A",
+                darker: "#0B1120",
+              },
+            },
+            fontFamily: {
+              arabic: ["Tajawal", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Tajawal", sans-serif;
+      }
+      .sidebar {
+        transition: transform 0.3s ease;
+      }
+      .nav-item {
+        transition: all 0.3s;
+      }
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(255, 140, 66, 0.1);
+        border-right: 3px solid #ff8c42;
+      }
+      .stat-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
+        backdrop-filter: blur(10px);
+      }
+      .dark .stat-card {
+        background: linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.8) 0%,
+          rgba(11, 17, 32, 0.9) 100%
+        );
+      }
+      .fade-in {
+        animation: fadeIn 0.3s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-100 dark:bg-armax-darker text-gray-800 dark:text-gray-100"
+  >
+    <!-- Mobile Header -->
+    <div
+      class="lg:hidden bg-armax-blue text-white p-4 flex justify-between items-center sticky top-0 z-50"
+    >
+      <div class="flex items-center gap-3">
+        <i class="fas fa-shield-alt text-armax-orange text-xl"></i>
+        <span class="font-bold text-lg">لوحة التحكم</span>
+      </div>
+      <button onclick="toggleSidebar()" class="text-white focus:outline-none">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="sidebar fixed lg:static inset-y-0 right-0 w-64 bg-white dark:bg-armax-dark shadow-xl transform translate-x-full lg:translate-x-0 z-40 flex flex-col"
+      >
+        <div class="p-6 border-b dark:border-gray-700">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-full bg-armax-blue flex items-center justify-center text-white text-xl"
+            >
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div>
+              <div class="font-bold text-lg dark:text-white">أرماكس</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">
+                لوحة الإدارة
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+          <button
+            onclick="showSection('dashboard')"
+            id="nav-dashboard"
+            class="nav-item active w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-home w-6 text-armax-blue"></i>
+            <span class="font-bold">الرئيسية</span>
+          </button>
+
+          <button
+            onclick="showSection('products')"
+            id="nav-products"
+            class="nav-item w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-box w-6 text-armax-orange"></i>
+            <span class="font-bold">إدارة المنتجات</span>
+            <span
+              id="productCount"
+              class="mr-auto bg-armax-orange text-white text-xs px-2 py-1 rounded-full"
+              >0</span
+            >
+          </button>
+
+          <button
+            onclick="showSection('offers')"
+            id="nav-offers"
+            class="nav-item w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-tags w-6 text-green-500"></i>
+            <span class="font-bold">العروض</span>
+            <span
+              id="offerCount"
+              class="mr-auto bg-green-500 text-white text-xs px-2 py-1 rounded-full"
+              >0</span
+            >
+          </button>
+
+          <button
+            onclick="showSection('users')"
+            id="nav-users"
+            class="nav-item w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-users w-6 text-purple-500"></i>
+            <span class="font-bold">المستخدمين</span>
+            <span
+              id="userCount"
+              class="mr-auto bg-purple-500 text-white text-xs px-2 py-1 rounded-full"
+              >0</span
+            >
+          </button>
+
+          <button
+            onclick="showSection('orders')"
+            id="nav-orders"
+            class="nav-item w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-shopping-cart w-6 text-blue-500"></i>
+            <span class="font-bold">الطلبات</span>
+          </button>
+
+          <div class="border-t dark:border-gray-700 my-4 pt-4">
+            <button
+              onclick="toggleDarkMode()"
+              class="w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              <i class="fas fa-moon w-6 text-gray-500 dark:text-yellow-400"></i>
+              <span class="font-bold">الوضع الليلي</span>
+            </button>
+
+            <button
+              onclick="logout()"
+              class="w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              <i class="fas fa-sign-out-alt w-6"></i>
+              <span class="font-bold">تسجيل الخروج</span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="p-4 border-t dark:border-gray-700">
+          <div class="flex items-center gap-3">
+            <img
+              src="https://ui-avatars.com/api/?name=Admin&background=003B6D&color=fff"
+              class="w-10 h-10 rounded-full"
+            />
+            <div class="flex-1">
+              <div class="font-bold text-sm dark:text-white">المسؤول</div>
+              <div class="text-xs text-green-500">متصل الآن</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div
+        id="overlay"
+        onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
+      ></div>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
+        <!-- Dashboard Section -->
+        <section id="section-dashboard" class="fade-in">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h1
+                class="text-3xl font-black text-gray-800 dark:text-white mb-2"
+              >
+                نظرة عامة
+              </h1>
+              <p class="text-gray-600 dark:text-gray-400">
+                آخر تحديث: <span id="lastUpdate"></span>
+              </p>
+            </div>
+            <a
+              href="index.html"
+              target="_blank"
+              class="px-4 py-2 rounded-lg bg-armax-blue text-white font-bold hover:bg-armax-lightBlue transition-colors flex items-center gap-2"
+            >
+              <i class="fas fa-external-link-alt"></i>
+              عرض الموقع
+            </a>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div
+              class="stat-card bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-armax-blue flex items-center justify-center text-xl"
+                >
+                  <i class="fas fa-box"></i>
+                </div>
+                <span
+                  class="text-green-500 text-sm font-bold flex items-center gap-1"
+                >
+                  <i class="fas fa-arrow-up"></i> +12%
+                </span>
+              </div>
+              <div
+                class="text-3xl font-black text-gray-800 dark:text-white mb-1"
+                id="statProducts"
+              >
+                0
+              </div>
+              <div class="text-gray-500 dark:text-gray-400 text-sm">
+                إجمالي المنتجات
+              </div>
+            </div>
+
+            <div
+              class="stat-card bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-armax-orange flex items-center justify-center text-xl"
+                >
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <span
+                  class="text-green-500 text-sm font-bold flex items-center gap-1"
+                >
+                  <i class="fas fa-arrow-up"></i> +5%
+                </span>
+              </div>
+              <div
+                class="text-3xl font-black text-gray-800 dark:text-white mb-1"
+                id="statOrders"
+              >
+                24
+              </div>
+              <div class="text-gray-500 dark:text-gray-400 text-sm">
+                طلب جديد
+              </div>
+            </div>
+
+            <div
+              class="stat-card bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center text-xl"
+                >
+                  <i class="fas fa-users"></i>
+                </div>
+                <span class="text-gray-500 text-sm font-bold">ثابت</span>
+              </div>
+              <div
+                class="text-3xl font-black text-gray-800 dark:text-white mb-1"
+                id="statUsers"
+              >
+                0
+              </div>
+              <div class="text-gray-500 dark:text-gray-400 text-sm">
+                المستخدمين
+              </div>
+            </div>
+
+            <div
+              class="stat-card bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center text-xl"
+                >
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <span
+                  class="text-green-500 text-sm font-bold flex items-center gap-1"
+                >
+                  <i class="fas fa-arrow-up"></i> +8%
+                </span>
+              </div>
+              <div
+                class="text-3xl font-black text-gray-800 dark:text-white mb-1"
+              >
+                12,450
+              </div>
+              <div class="text-gray-500 dark:text-gray-400 text-sm">
+                إجمالي المبيعات (ر.س)
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <div
+              class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                مبيعات الشهر
+              </h3>
+              <canvas id="salesChart" height="200"></canvas>
+            </div>
+            <div
+              class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+            >
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                أفضل المنتجات مبيعاً
+              </h3>
+              <canvas id="productsChart" height="200"></canvas>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div
+            class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
+          >
+            <div
+              class="p-6 border-b dark:border-gray-700 flex justify-between items-center"
+            >
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+                آخر النشاطات
+              </h3>
+              <button class="text-armax-orange hover:underline text-sm">
+                عرض الكل
+              </button>
+            </div>
+            <div class="p-6 space-y-4" id="activityList">
+              <!-- Activity items will be inserted here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="section-products" class="hidden fade-in">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-black text-gray-800 dark:text-white">
+              إدارة المنتجات
+            </h1>
+            <button
+              onclick="openProductModal()"
+              class="px-6 py-3 rounded-xl bg-armax-orange text-white font-bold hover:bg-armax-lightOrange transition-colors flex items-center gap-2"
+            >
+              <i class="fas fa-plus"></i>
+              إضافة منتج جديد
+            </button>
+          </div>
+
+          <!-- Filters -->
+          <div
+            class="bg-white dark:bg-armax-dark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6 flex flex-wrap gap-4"
+          >
+            <input
+              type="text"
+              id="productSearch"
+              placeholder="بحث عن منتج..."
+              class="flex-1 min-w-[200px] px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              oninput="filterProducts()"
+            />
+            <select
+              id="productCategory"
+              class="px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              onchange="filterProducts()"
+            >
+              <option value="all">كل الفئات</option>
+              <option value="cookware">أواني الطبخ</option>
+              <option value="storage">تخزين وتنظيم</option>
+              <option value="tools">أدوات منزلية</option>
+              <option value="electronics">أجهزة صغيرة</option>
+            </select>
+          </div>
+
+          <!-- Products Table -->
+          <div
+            class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      المنتج
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الفئة
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      السعر
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الحالة
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="productsTableBody"
+                  class="divide-y dark:divide-gray-700"
+                >
+                  <!-- Products will be inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Offers Section -->
+        <section id="section-offers" class="hidden fade-in">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-black text-gray-800 dark:text-white">
+              إدارة العروض
+            </h1>
+            <button
+              onclick="openOfferModal()"
+              class="px-6 py-3 rounded-xl bg-green-500 text-white font-bold hover:bg-green-600 transition-colors flex items-center gap-2"
+            >
+              <i class="fas fa-plus"></i>
+              إضافة عرض جديد
+            </button>
+          </div>
+
+          <div id="offersGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Offers will be inserted here -->
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="section-users" class="hidden fade-in">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-black text-gray-800 dark:text-white">
+              إدارة المستخدمين
+            </h1>
+            <button
+              onclick="openUserModal()"
+              class="px-6 py-3 rounded-xl bg-purple-500 text-white font-bold hover:bg-purple-600 transition-colors flex items-center gap-2"
+            >
+              <i class="fas fa-user-plus"></i>
+              إضافة مستخدم
+            </button>
+          </div>
+
+          <div
+            class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      المستخدم
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      البريد الإلكتروني
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الدور
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الحالة
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="usersTableBody"
+                  class="divide-y dark:divide-gray-700"
+                >
+                  <!-- Users will be inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="section-orders" class="hidden fade-in">
+          <h1 class="text-3xl font-black text-gray-800 dark:text-white mb-8">
+            الطلبات الواردة
+          </h1>
+          <div
+            class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 text-center"
+          >
+            <i
+              class="fas fa-box-open text-6xl text-gray-300 dark:text-gray-600 mb-4"
+            ></i>
+            <p class="text-gray-500 dark:text-gray-400">
+              الطلبات تظهر هنا عندما يرسلها العملاء عبر واتساب
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div
+      id="productModal"
+      class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white dark:bg-armax-dark rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="p-6 border-b dark:border-gray-700 flex justify-between items-center"
+        >
+          <h3 class="text-xl font-bold dark:text-white" id="productModalTitle">
+            إضافة منتج جديد
+          </h3>
+          <button
+            onclick="closeProductModal()"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <form id="productForm" class="p-6 space-y-4">
+          <input type="hidden" id="productId" />
+          <div>
+            <label
+              class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+              >اسم المنتج</label
+            >
+            <input
+              type="text"
+              id="productName"
+              required
+              class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+                >السعر</label
+              >
+              <input
+                type="number"
+                id="productPrice"
+                required
+                class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+                >السعر القديم (اختياري)</label
+              >
+              <input
+                type="number"
+                id="productOldPrice"
+                class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+              >الفئة</label
+            >
+            <select
+              id="productCategory"
+              required
+              class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+            >
+              <option value="cookware">أواني الطبخ</option>
+              <option value="storage">تخزين وتنظيم</option>
+              <option value="tools">أدوات منزلية</option>
+              <option value="electronics">أجهزة صغيرة</option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+              >رابط الصورة</label
+            >
+            <input
+              type="url"
+              id="productImage"
+              required
+              class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
+              >الوصف</label
+            >
+            <textarea
+              id="productDesc"
+              rows="3"
+              class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+            ></textarea>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button
+              type="button"
+              onclick="closeProductModal()"
+              class="flex-1 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              إلغاء
+            </button>
+            <button
+              type="submit"
+              class="flex-1 py-3 rounded-lg bg-armax-blue text-white font-bold hover:bg-armax-lightBlue"
+            >
+              حفظ
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // التحقق من تسجيل الدخول - يجب أن يكون أول كود يعمل
+      (function () {
+        const isLoggedIn = localStorage.getItem("adminLoggedIn");
+        console.log("حالة تسجيل الدخول:", isLoggedIn); // للتأكد
+        const API_URL = "http://localhost:5000/api";
+
+        // التحقق من التوكن
+        const token = localStorage.getItem("adminToken");
+        if (!token) {
+          window.location.href = "admin-login.html";
+        }
+
+        // دالة للطلبات الم Authenticated
+        async function apiRequest(endpoint, options = {}) {
+          try {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+              ...options,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`,
+                ...options.headers,
+              },
+            });
+
+            if (response.status === 401) {
+              localStorage.removeItem("adminToken");
+              window.location.href = "admin-login.html";
+              return;
+            }
+            return await response.json();
+          } catch (error) {
+            console.error("API Error:", error);
+            showToast("خطأ في الاتصال بالخادم");
+            return { success: false, error: error.message };
+          }
+        }
+
+        if (isLoggedIn !== "true") {
+          window.location.replace("admin-login.html");
+          return; // إيقاف باقي الكود
+        }
+      })();
+      // Security Check
+      if (localStorage.getItem("adminLoggedIn") !== "true") {
+        window.location.href = "admin-login.html";
+      }
+
+      // Initialize Data
+      let products = JSON.parse(localStorage.getItem("armax_products")) || [
+        {
+          id: 1,
+          name: "طقم قدور جرانيت 12 قطعة",
+          category: "cookware",
+          price: 850,
+          oldPrice: 1200,
+          image:
+            "https://images.unsplash.com/photo-1584990347449-a2d4c2c044c5?w=400",
+          desc: "طقم كامل بمقابض باكلايت",
+        },
+        {
+          id: 2,
+          name: "طقم حافظات طعام 24 قطعة",
+          category: "storage",
+          price: 220,
+          oldPrice: 350,
+          image:
+            "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400",
+          desc: "بلاستيك آمن للطعام",
+        },
+      ];
+
+      let users = JSON.parse(localStorage.getItem("armax_users")) || [
+        {
+          id: 1,
+          name: "المسؤول",
+          email: "admin@armax.com",
+          role: "مدير",
+          status: "active",
+        },
+        {
+          id: 2,
+          name: "أحمد محمد",
+          email: "ahmed@armax.com",
+          role: "محرر",
+          status: "active",
+        },
+      ];
+
+      let offers = JSON.parse(localStorage.getItem("armax_offers")) || [
+        {
+          id: 1,
+          title: "خصم 25%",
+          desc: "على طلبات تزيد عن 50 ألف ريال",
+          icon: "percentage",
+          color: "blue",
+        },
+        {
+          id: 2,
+          title: "اشترِ 10 واحصل على 12",
+          desc: "على تشكيلة الأواني المنزلية",
+          icon: "gift",
+          color: "orange",
+        },
+      ];
+
+      // Save initial data if empty
+      if (!localStorage.getItem("armax_products")) {
+        localStorage.setItem("armax_products", JSON.stringify(products));
+      }
+
+      // Navigation
+      function showSection(sectionName) {
+        // Hide all sections
+        document.querySelectorAll("section").forEach((section) => {
+          section.classList.add("hidden");
+        });
+
+        // Show selected section
+        document
+          .getElementById(`section-${sectionName}`)
+          .classList.remove("hidden");
+
+        // Update nav active state
+        document.querySelectorAll(".nav-item").forEach((item) => {
+          item.classList.remove(
+            "active",
+            "bg-orange-50",
+            "dark:bg-orange-900/20",
+          );
+        });
+        document.getElementById(`nav-${sectionName}`).classList.add("active");
+
+        // Close sidebar on mobile
+        if (window.innerWidth < 1024) {
+          toggleSidebar();
+        }
+
+        // Load section data
+        if (sectionName === "products") renderProducts();
+        if (sectionName === "users") renderUsers();
+        if (sectionName === "offers") renderOffers();
+      }
+      async function loadProducts() {
+        try {
+          const data = await apiRequest("/products");
+          if (data.success) {
+            products = data.data;
+            renderProducts();
+            updateStats();
+          }
+        } catch (error) {
+          console.error("Error loading products:", error);
+        }
+      }
+      async function saveProductToDB(productData) {
+        const id = document.getElementById("productId").value;
+        const method = id ? "PUT" : "POST";
+        const endpoint = id ? `/products/${id}` : "/products";
+
+        try {
+          const data = await apiRequest(endpoint, {
+            method: method,
+            body: JSON.stringify(productData),
+          });
+
+          if (data.success) {
+            showToast(
+              id
+                ? "تم تحديث المنتج في قاعدة البيانات"
+                : "تم إضافة المنتج إلى قاعدة البيانات",
+            );
+            closeProductModal();
+            loadProducts(); // إعادة تحميل المنتجات من القاعدة
+          } else {
+            showToast("حدث خطأ: " + (data.error || "غير معروف"));
+          }
+        } catch (error) {
+          showToast("حدث خطأ أثناء الاتصال بالخادم");
+        }
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        sidebar.classList.toggle("translate-x-full");
+        overlay.classList.toggle("hidden");
+      }
+
+      function logout() {
+        localStorage.removeItem("adminLoggedIn");
+        localStorage.removeItem("adminUser");
+        window.location.href = "admin-login.html";
+      }
+
+      function toggleDarkMode() {
+        document.documentElement.classList.toggle("dark");
+        localStorage.setItem(
+          "darkMode",
+          document.documentElement.classList.contains("dark"),
+        );
+      }
+
+      // Dashboard Stats
+      function updateStats() {
+        document.getElementById("statProducts").textContent = products.length;
+        document.getElementById("statUsers").textContent = users.length;
+        document.getElementById("productCount").textContent = products.length;
+        document.getElementById("userCount").textContent = users.length;
+        document.getElementById("offerCount").textContent = offers.length;
+        document.getElementById("lastUpdate").textContent =
+          new Date().toLocaleString("ar-SA");
+      }
+
+      // Products Management
+      function renderProducts() {
+        const tbody = document.getElementById("productsTableBody");
+        const filter =
+          document.getElementById("productCategory")?.value || "all";
+        const search =
+          document.getElementById("productSearch")?.value.toLowerCase() || "";
+
+        let filtered = products;
+        if (filter !== "all")
+          filtered = filtered.filter((p) => p.category === filter);
+        if (search)
+          filtered = filtered.filter((p) =>
+            p.name.toLowerCase().includes(search),
+          );
+
+        tbody.innerHTML = filtered
+          .map(
+            (product) => `
+               <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                 <td class="px-6 py-4">
+                   <div class="flex items-center gap-3">
+                     <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover" />
+                     <div>
+                       <div class="font-bold text-gray-800 dark:text-white">${product.name}</div>
+                       <div class="text-sm text-gray-500 dark:text-gray-400">${product.desc || ""}</div>
+                     </div>
+                   </div>
+                 </td>
+                 <td class="px-6 py-4">
+                   <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                     ${getCategoryName(product.category)}
+                   </span>
+                 </td>
+                 <td class="px-6 py-4">
+                   <div class="font-bold text-armax-orange">${product.price} ر.س</div>
+                   ${product.oldPrice ? `<div class="text-sm text-gray-400 line-through">${product.oldPrice} ر.س</div>` : ""}
+                 </td>
+                 <td class="px-6 py-4">
+                   <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+                     نشط
+                   </span>
+                 </td>
+                 <td class="px-6 py-4">
+                   <div class="flex gap-2">
+                     <button onclick="editProduct(${product.id})" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center">
+                       <i class="fas fa-edit"></i>
+                     </button>
+                     <button onclick="deleteProduct(${product.id})" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center">
+                       <i class="fas fa-trash"></i>
+                     </button>
+                   </div>
+                 </td>
+               </tr>
+             `,
+          )
+          .join("");
+
+        updateStats();
+      }
+
+      function getCategoryName(cat) {
+        const names = {
+          cookware: "أواني الطبخ",
+          storage: "تخزين",
+          tools: "أدوات",
+          electronics: "أجهزة",
+        };
+        return names[cat] || cat;
+      }
+
+      function openProductModal() {
+        document.getElementById("productModal").classList.remove("hidden");
+        document.getElementById("productForm").reset();
+        document.getElementById("productId").value = "";
+        document.getElementById("productModalTitle").textContent =
+          "إضافة منتج جديد";
+      }
+
+      function closeProductModal() {
+        document.getElementById("productModal").classList.add("hidden");
+      }
+
+      function editProduct(id) {
+        const product = products.find((p) => p.id === id);
+        if (!product) return;
+
+        document.getElementById("productId").value = product.id;
+        document.getElementById("productName").value = product.name;
+        document.getElementById("productPrice").value = product.price;
+        document.getElementById("productOldPrice").value =
+          product.oldPrice || "";
+        document.getElementById("productCategory").value = product.category;
+        document.getElementById("productImage").value = product.image;
+        document.getElementById("productDesc").value = product.desc || "";
+
+        document.getElementById("productModalTitle").textContent = "تعديل منتج";
+        document.getElementById("productModal").classList.remove("hidden");
+      }
+
+      function deleteProduct(id) {
+        if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+        products = products.filter((p) => p.id !== id);
+        localStorage.setItem("armax_products", JSON.stringify(products));
+        renderProducts();
+        addActivity("حذف منتج", `تم حذف المنتج رقم ${id}`);
+      }
+
+      document
+        .getElementById("productForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const id = document.getElementById("productId").value;
+          const productData = {
+            id: id ? parseInt(id) : Date.now(),
+            name: document.getElementById("productName").value,
+            price: parseInt(document.getElementById("productPrice").value),
+            oldPrice:
+              parseInt(document.getElementById("productOldPrice").value) ||
+              null,
+            category: document.getElementById("productCategory").value,
+            image: document.getElementById("productImage").value,
+            desc: document.getElementById("productDesc").value,
+          };
+
+          if (id) {
+            const index = products.findIndex((p) => p.id == id);
+            products[index] = productData;
+            addActivity("تحديث منتج", `تم تحديث ${productData.name}`);
+          } else {
+            products.push(productData);
+            addActivity("إضافة منتج", `تم إضافة ${productData.name}`);
+          }
+
+          localStorage.setItem("armax_products", JSON.stringify(products));
+          closeProductModal();
+          renderProducts();
+        });
+
+      function filterProducts() {
+        renderProducts();
+      }
+
+      // Users Management
+      function renderUsers() {
+        const tbody = document.getElementById("usersTableBody");
+        tbody.innerHTML = users
+          .map(
+            (user) => `
+               <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                 <td class="px-6 py-4">
+                   <div class="flex items-center gap-3">
+                     <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random" class="w-10 h-10 rounded-full" />
+                     <div class="font-bold text-gray-800 dark:text-white">${user.name}</div>
+                   </div>
+                 </td>
+                 <td class="px-6 py-4 text-gray-600 dark:text-gray-300">${user.email}</td>
+                 <td class="px-6 py-4">
+                   <span class="px-3 py-1 rounded-full text-xs font-bold ${user.role === "مدير" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"}">
+                     ${user.role}
+                   </span>
+                 </td>
+                 <td class="px-6 py-4">
+                   <span class="px-3 py-1 rounded-full text-xs font-bold ${user.status === "active" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}">
+                     ${user.status === "active" ? "نشط" : "غير نشط"}
+                   </span>
+                 </td>
+                 <td class="px-6 py-4">
+                   <button onclick="deleteUser(${user.id})" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center ${user.role === "مدير" ? "opacity-50 cursor-not-allowed" : ""}" ${user.role === "مدير" ? "disabled" : ""}>
+                     <i class="fas fa-trash"></i>
+                   </button>
+                 </td>
+               </tr>
+             `,
+          )
+          .join("");
+        updateStats();
+      }
+
+      function openUserModal() {
+        const name = prompt("اسم المستخدم:");
+        if (!name) return;
+        const email = prompt("البريد الإلكتروني:");
+        if (!email) return;
+
+        users.push({
+          id: Date.now(),
+          name,
+          email,
+          role: "محرر",
+          status: "active",
+        });
+        localStorage.setItem("armax_users", JSON.stringify(users));
+        renderUsers();
+        addActivity("إضافة مستخدم", `تم إضافة ${name}`);
+      }
+
+      function deleteUser(id) {
+        if (!confirm("هل أنت متأكد من حذف هذا المستخدم؟")) return;
+        users = users.filter((u) => u.id !== id);
+        localStorage.setItem("armax_users", JSON.stringify(users));
+        renderUsers();
+      }
+
+      // Offers Management
+      function renderOffers() {
+        const grid = document.getElementById("offersGrid");
+        grid.innerHTML = offers
+          .map(
+            (offer) => `
+               <div class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative group">
+                 <button onclick="deleteOffer(${offer.id})" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <i class="fas fa-trash"></i>
+                 </button>
+                 <div class="w-16 h-16 rounded-2xl bg-${offer.color}-100 dark:bg-${offer.color}-900/30 text-${offer.color}-600 flex items-center justify-center text-2xl mb-4">
+                   <i class="fas fa-${offer.icon}"></i>
+                 </div>
+                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">${offer.title}</h3>
+                 <p class="text-gray-600 dark:text-gray-400">${offer.desc}</p>
+               </div>
+             `,
+          )
+          .join("");
+        updateStats();
+      }
+
+      function openOfferModal() {
+        const title = prompt("عنوان العرض:");
+        if (!title) return;
+        const desc = prompt("وصف العرض:");
+        if (!desc) return;
+
+        offers.push({
+          id: Date.now(),
+          title,
+          desc,
+          icon: "tag",
+          color: "blue",
+        });
+        localStorage.setItem("armax_offers", JSON.stringify(offers));
+        renderOffers();
+        addActivity("إضافة عرض", title);
+      }
+
+      function deleteOffer(id) {
+        if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
+        offers = offers.filter((o) => o.id !== id);
+        localStorage.setItem("armax_offers", JSON.stringify(offers));
+        renderOffers();
+      }
+
+      // Activity Log
+      function addActivity(action, details) {
+        const activity = JSON.parse(
+          localStorage.getItem("armax_activity") || "[]",
+        );
+        activity.unshift({
+          id: Date.now(),
+          action,
+          details,
+          time: new Date().toLocaleString("ar-SA"),
+        });
+        localStorage.setItem(
+          "armax_activity",
+          JSON.stringify(activity.slice(0, 10)),
+        );
+        renderActivity();
+      }
+
+      function renderActivity() {
+        const activity = JSON.parse(
+          localStorage.getItem("armax_activity") || "[]",
+        );
+        const container = document.getElementById("activityList");
+
+        if (activity.length === 0) {
+          container.innerHTML =
+            '<p class="text-gray-400 text-center">لا توجد نشاطات حديثة</p>';
+          return;
+        }
+
+        container.innerHTML = activity
+          .map(
+            (item) => `
+               <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                 <div class="w-2 h-2 rounded-full bg-armax-orange mt-2"></div>
+                 <div class="flex-1">
+                   <div class="font-bold text-gray-800 dark:text-white text-sm">${item.action}</div>
+                   <div class="text-gray-600 dark:text-gray-400 text-sm">${item.details}</div>
+                   <div class="text-xs text-gray-400 mt-1">${item.time}</div>
+                 </div>
+               </div>
+             `,
+          )
+          .join("");
+      }
+
+      // Charts
+      function initCharts() {
+        const salesCtx = document.getElementById("salesChart").getContext("2d");
+        new Chart(salesCtx, {
+          type: "line",
+          data: {
+            labels: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو"],
+            datasets: [
+              {
+                label: "المبيعات",
+                data: [12000, 19000, 15000, 25000, 22000, 30000],
+                borderColor: "#FF8C42",
+                backgroundColor: "rgba(255, 140, 66, 0.1)",
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+            },
+            scales: {
+              y: { beginAtZero: true },
+            },
+          },
+        });
+
+        const productsCtx = document
+          .getElementById("productsChart")
+          .getContext("2d");
+        new Chart(productsCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["أواني الطبخ", "تخزين", "أدوات", "أجهزة"],
+            datasets: [
+              {
+                data: [35, 25, 20, 20],
+                backgroundColor: ["#003B6D", "#FF8C42", "#10B981", "#8B5CF6"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: "bottom" },
+            },
+          },
+        });
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        updateStats();
+        renderActivity();
+        initCharts();
+
+        if (localStorage.getItem("darkMode") === "true") {
+          document.documentElement.classList.add("dark");
+        }
+      });
+    </script>
+  </body>
+</html>

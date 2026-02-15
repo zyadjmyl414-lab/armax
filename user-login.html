@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول | أرماكس Armax</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              armax: {
+                blue: "#003B6D",
+                lightBlue: "#0056A3",
+                orange: "#FF8C42",
+                lightOrange: "#FFA726",
+                dark: "#0F172A",
+                darker: "#0B1120",
+              },
+            },
+            fontFamily: {
+              arabic: ["Tajawal", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "Tajawal", sans-serif;
+        background: linear-gradient(135deg, #003b6d 0%, #0f172a 100%);
+        min-height: 100vh;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .dark .glass-card {
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .input-group {
+        position: relative;
+        transition: all 0.3s;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 1rem 3rem 1rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 1rem;
+        font-family: "Tajawal", sans-serif;
+        transition: all 0.3s;
+        background: white;
+      }
+
+      .dark .input-field {
+        background: #1e293b;
+        border-color: #374151;
+        color: white;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: #ff8c42;
+        box-shadow: 0 0 0 4px rgba(255, 140, 66, 0.1);
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        transition: all 0.3s;
+      }
+
+      .input-field:focus ~ .input-icon {
+        color: #ff8c42;
+      }
+
+      .tab-btn {
+        position: relative;
+        padding-bottom: 0.75rem;
+        font-weight: 700;
+        color: #6b7280;
+        transition: all 0.3s;
+      }
+
+      .tab-btn.active {
+        color: #003b6d;
+      }
+
+      .dark .tab-btn.active {
+        color: #ff8c42;
+      }
+
+      .tab-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 3px;
+        background: #ff8c42;
+        border-radius: 2px;
+      }
+
+      .social-btn {
+        transition: all 0.3s;
+        border: 2px solid #e5e7eb;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: #ff8c42;
+      }
+
+      .divider {
+        position: relative;
+        text-align: center;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e5e7eb;
+      }
+
+      .divider span {
+        position: relative;
+        background: white;
+        padding: 0 1rem;
+        color: #6b7280;
+      }
+
+      .dark .divider span {
+        background: #0f172a;
+      }
+
+      /* Animation */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-slide-in {
+        animation: slideIn 0.5s ease-out;
+      }
+
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 3px solid #ff8c42;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center p-4">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 opacity-10 pointer-events-none">
+      <div
+        class="absolute inset-0"
+        style="
+          background-image: radial-gradient(
+            circle at 2px 2px,
+            white 1px,
+            transparent 0
+          );
+          background-size: 40px 40px;
+        "
+      ></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-5xl grid lg:grid-cols-2 gap-8 items-center">
+      <!-- Left Side: Branding -->
+      <div class="hidden lg:block text-white space-y-6 animate-slide-in">
+        <div class="flex items-center gap-4 mb-8">
+          <img
+            src="logo.jpeg"
+            alt="Armax"
+            class="w-20 h-20 rounded-full bg-white p-2 shadow-2xl"
+            onerror="this.style.display = 'none'"
+          />
+          <div>
+            <h1 class="text-5xl font-black">أرماكس</h1>
+            <p class="text-armax-orange text-xl font-bold">ARMAX</p>
+          </div>
+        </div>
+
+        <h2 class="text-3xl font-bold leading-relaxed">
+          منصتك الموثوقة<br />
+          <span class="text-armax-orange">لتجارة الجملة</span>
+        </h2>
+
+        <p class="text-blue-100 text-lg leading-relaxed">
+          انضم إلى آلاف التجار الذين يثقون بأرماكس. احصل على أسعار الجملة
+          المنافسة وشحن سريع لجميع المنتجات المنزلية.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 mt-8">
+          <div
+            class="text-center p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+          >
+            <div class="text-3xl font-black text-armax-orange">+1000</div>
+            <div class="text-sm text-blue-100">منتج</div>
+          </div>
+          <div
+            class="text-center p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+          >
+            <div class="text-3xl font-black text-armax-orange">+500</div>
+            <div class="text-sm text-blue-100">عميل</div>
+          </div>
+          <div
+            class="text-center p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+          >
+            <div class="text-3xl font-black text-armax-orange">24/7</div>
+            <div class="text-sm text-blue-100">دعم</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Login/Register Form -->
+      <div
+        class="glass-card rounded-3xl shadow-2xl p-8 animate-slide-in relative overflow-hidden"
+      >
+        <!-- Decorative Element -->
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-armax-orange/10 rounded-full -mr-16 -mt-16 blur-2xl"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-32 h-32 bg-armax-blue/10 rounded-full -ml-16 -mb-16 blur-2xl"
+        ></div>
+
+        <!-- Header -->
+        <div class="relative z-10">
+          <div class="text-center mb-8 lg:hidden">
+            <img
+              src="logo.jpeg"
+              alt="Armax"
+              class="w-16 h-16 rounded-full mx-auto mb-4 bg-white p-1 shadow-lg"
+            />
+            <h2 class="text-2xl font-black text-armax-blue dark:text-white">
+              أرماكس
+            </h2>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex gap-8 mb-8 border-b dark:border-gray-700">
+            <button
+              onclick="switchTab('login')"
+              id="tab-login"
+              class="tab-btn active flex-1 text-center text-lg"
+            >
+              <i class="fas fa-sign-in-alt ml-2"></i>
+              تسجيل الدخول
+            </button>
+            <button
+              onclick="switchTab('register')"
+              id="tab-register"
+              class="tab-btn flex-1 text-center text-lg"
+            >
+              <i class="fas fa-user-plus ml-2"></i>
+              إنشاء حساب
+            </button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="space-y-5" onsubmit="handleLogin(event)">
+            <div class="input-group">
+              <input
+                type="email"
+                name="email"
+                class="input-field"
+                placeholder="البريد الإلكتروني"
+                required
+              />
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                name="password"
+                class="input-field"
+                placeholder="كلمة المرور"
+                required
+              />
+              <i class="fas fa-lock input-icon"></i>
+              <button
+                type="button"
+                onclick="togglePassword(this)"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-armax-orange"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between text-sm">
+              <label
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-400 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  name="remember"
+                  class="w-4 h-4 rounded border-gray-300 text-armax-orange focus:ring-armax-orange"
+                />
+                تذكرني
+              </label>
+              <a href="#" class="text-armax-orange hover:underline font-bold"
+                >نسيت كلمة المرور؟</a
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 rounded-xl bg-gradient-to-r from-armax-blue to-armax-lightBlue text-white font-bold text-lg hover:shadow-xl hover:shadow-armax-blue/30 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            >
+              <span id="loginText">دخول</span>
+              <i class="fas fa-arrow-left" id="loginIcon"></i>
+            </button>
+          </form>
+
+          <!-- Register Form (Hidden by default) -->
+          <form
+            id="registerForm"
+            class="space-y-4 hidden"
+            onsubmit="handleRegister(event)"
+          >
+            <div class="grid grid-cols-2 gap-4">
+              <div class="input-group">
+                <input
+                  type="text"
+                  name="firstName"
+                  class="input-field"
+                  placeholder="الاسم الأول"
+                  required
+                />
+                <i class="fas fa-user input-icon"></i>
+              </div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  name="lastName"
+                  class="input-field"
+                  placeholder="الاسم الأخير"
+                  required
+                />
+                <i class="fas fa-user input-icon"></i>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <input
+                type="email"
+                name="email"
+                class="input-field"
+                placeholder="البريد الإلكتروني"
+                required
+              />
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <div class="input-group">
+              <input
+                type="tel"
+                name="phone"
+                class="input-field"
+                placeholder="رقم الجوال (05xxxxxxxx)"
+                required
+                pattern="05[0-9]{8}"
+              />
+              <i class="fas fa-phone input-icon"></i>
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                name="password"
+                class="input-field"
+                placeholder="كلمة المرور"
+                required
+                minlength="6"
+              />
+              <i class="fas fa-lock input-icon"></i>
+              <button
+                type="button"
+                onclick="togglePassword(this)"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-armax-orange"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                name="confirmPassword"
+                class="input-field"
+                placeholder="تأكيد كلمة المرور"
+                required
+              />
+              <i class="fas fa-lock input-icon"></i>
+            </div>
+
+            <label
+              class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                required
+                class="w-4 h-4 mt-1 rounded border-gray-300 text-armax-orange focus:ring-armax-orange"
+              />
+              <span
+                >أوافق على
+                <a href="#" class="text-armax-orange hover:underline"
+                  >شروط الاستخدام</a
+                >
+                و
+                <a href="#" class="text-armax-orange hover:underline"
+                  >سياسة الخصوصية</a
+                ></span
+              >
+            </label>
+
+            <button
+              type="submit"
+              class="w-full py-4 rounded-xl bg-gradient-to-r from-armax-orange to-armax-lightOrange text-white font-bold text-lg hover:shadow-xl hover:shadow-armax-orange/30 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            >
+              <span id="registerText">إنشاء حساب</span>
+              <i class="fas fa-user-plus" id="registerIcon"></i>
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider my-6">
+            <span>أو</span>
+          </div>
+
+          <!-- Google Sign In -->
+          <div
+            id="g_id_onload"
+            data-client_id="592918520480-d6sl9pqcf38nn75grd2st3e85d7k4aq4.apps.googleusercontent.com"
+            data-context="signin"
+            data-ux_mode="popup"
+            data-callback="handleGoogleSignIn"
+            data-auto_prompt="false"
+          ></div>
+
+          <div class="flex justify-center">
+            <div
+              class="g_id_signin"
+              data-type="standard"
+              data-shape="pill"
+              data-theme="outline"
+              data-text="signin_with"
+              data-size="large"
+              data-locale="ar"
+              data-logo_alignment="center"
+            ></div>
+          </div>
+
+          <!-- Back to Home -->
+          <div class="mt-8 text-center">
+            <a
+              href="index.html"
+              class="inline-flex items-center gap-2 text-gray-500 hover:text-armax-orange transition-colors"
+            >
+              <i class="fas fa-arrow-right"></i>
+              <span>العودة للرئيسية</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-full shadow-2xl z-50 translate-y-[-100px] transition-all duration-300 flex items-center gap-3"
+    >
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="toastMessage">حدث خطأ</span>
+    </div>
+
+    <script>
+      // Check URL params for tab
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("tab") === "register") {
+        switchTab("register");
+      }
+
+      // Dark mode check
+      if (localStorage.getItem("darkMode") === "true") {
+        document.documentElement.classList.add("dark");
+      }
+
+      function switchTab(tab) {
+        const loginTab = document.getElementById("tab-login");
+        const registerTab = document.getElementById("tab-register");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+
+        if (tab === "login") {
+          loginTab.classList.add("active");
+          registerTab.classList.remove("active");
+          loginForm.classList.remove("hidden");
+          registerForm.classList.add("hidden");
+        } else {
+          loginTab.classList.remove("active");
+          registerTab.classList.add("active");
+          loginForm.classList.add("hidden");
+          registerForm.classList.remove("hidden");
+        }
+      }
+
+      function togglePassword(btn) {
+        const input = btn.parentElement.querySelector("input");
+        const icon = btn.querySelector("i");
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          input.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      }
+
+      function showToast(message, type = "error") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+
+        toast.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl z-50 transition-all duration-300 flex items-center gap-3 ${type === "success" ? "bg-green-500" : "bg-red-500"} text-white`;
+        toastMessage.textContent = message;
+        toast.style.transform = "translate(-50%, 0)";
+
+        setTimeout(() => {
+          toast.style.transform = "translate(-50%, -150px)";
+        }, 4000);
+      }
+
+      async function handleLogin(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalContent = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span> جاري الدخول...';
+
+        try {
+          const response = await fetch("login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...data, action: "login" }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            localStorage.setItem("userToken", result.token);
+            localStorage.setItem("userData", JSON.stringify(result.user));
+            showToast("تم تسجيل الدخول بنجاح!", "success");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1500);
+          } else {
+            showToast(result.message || "خطأ في البيانات");
+          }
+        } catch (error) {
+          showToast("حدث خطأ في الاتصال");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalContent;
+        }
+      }
+
+      async function handleRegister(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        if (data.password !== data.confirmPassword) {
+          showToast("كلمة المرور غير متطابقة");
+          return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalContent = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span> جاري إنشاء الحساب...';
+
+        try {
+          const response = await fetch("login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...data, action: "register" }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showToast("تم إنشاء الحساب بنجاح!", "success");
+            setTimeout(() => {
+              switchTab("login");
+            }, 1500);
+          } else {
+            showToast(result.message || "البريد الإلكتروني مستخدم مسبقاً");
+          }
+        } catch (error) {
+          showToast("حدث خطأ في الاتصال");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalContent;
+        }
+      }
+
+      // Google Sign In Handler
+      async function handleGoogleSignIn(response) {
+        try {
+          const responseData = await fetch("login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "google_login",
+              credential: response.credential,
+            }),
+          });
+
+          const result = await responseData.json();
+
+          if (result.success) {
+            localStorage.setItem("userToken", result.token);
+            localStorage.setItem("userData", JSON.stringify(result.user));
+            showToast("تم تسجيل الدخول عبر Google بنجاح!", "success");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1500);
+          } else {
+            showToast(result.message || "فشل تسجيل الدخول عبر Google");
+          }
+        } catch (error) {
+          showToast("حدث خطأ في الاتصال بـ Google");
+        }
+      }
+
+      // Check if user is already logged in
+      if (localStorage.getItem("userToken")) {
+        // Optionally redirect to index or show user profile
+        console.log("User is logged in");
+      }
+    </script>
+  </body>
+</html>

@@ -314,6 +314,34 @@
               <i class="fas fa-sun hidden dark:block"></i>
             </button>
 
+            <!-- في ملف index.html، ضع هذا الكود داخل div.header-actions -->
+            <div class="flex items-center gap-3">
+              <!-- زر تسجيل الدخول -->
+              <a
+                href="user-login.html"
+                class="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-armax-blue text-armax-blue dark:text-white dark:border-white font-bold hover:bg-armax-blue hover:text-white transition-all duration-300"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                <span>تسجيل الدخول</span>
+              </a>
+
+              <!-- زر إنشاء حساب -->
+              <a
+                href="user-login.html?tab=register"
+                class="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-armax-orange text-white font-bold hover:bg-armax-lightOrange transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <i class="fas fa-user-plus"></i>
+                <span>إنشاء حساب</span>
+              </a>
+
+              <!-- للموبايل: أيقونة فقط -->
+              <a
+                href="user-login.html"
+                class="md:hidden w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
+              >
+                <i class="fas fa-user"></i>
+              </a>
+            </div>
             <!-- Cart Button - New Addition -->
             <button
               onclick="toggleCart()"
@@ -442,26 +470,7 @@
                   منتج متنوع
                 </div>
               </div>
-              <div class="text-center">
-                <div
-                  class="text-3xl font-black text-armax-blue dark:text-armax-orange"
-                >
-                  +500
-                </div>
-                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  عميل سعيد
-                </div>
-              </div>
-              <div class="text-center">
-                <div
-                  class="text-3xl font-black text-armax-blue dark:text-armax-orange"
-                >
-                  24/7
-                </div>
-                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  دعم فني
-                </div>
-              </div>
+              <div class="text-center"></div>
             </div>
           </div>
 
@@ -572,7 +581,10 @@
                 <div class="text-4xl font-black text-armax-orange mb-1">
                   15+
                 </div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">
+                <div
+                  class="text-sm text-gray-600 dark:text-gray-400"
+                  style="font-weight: bold"
+                >
                   سنة خبرة
                 </div>
               </div>
@@ -615,17 +627,8 @@
                   >ضمان جودة على جميع المنتجات</span
                 >
               </div>
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-6 h-6 rounded-full bg-armax-orange text-white flex items-center justify-center text-sm"
-                >
-                  <i class="fas fa-check"></i>
-                </div>
-                <span class="text-gray-700 dark:text-gray-300 font-bold"
-                  >خدمة عملاء على مدار الساعة</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3"></div>
+              <!-- <div class="flex items-center gap-3">
                 <div
                   class="w-6 h-6 rounded-full bg-armax-orange text-white flex items-center justify-center text-sm"
                 >
@@ -634,7 +637,7 @@
                 <span class="text-gray-700 dark:text-gray-300 font-bold"
                   >إمكانية الإرجاع خلال 14 يوم</span
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -663,9 +666,7 @@
           <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
             عروض حصرية
           </h2>
-          <p class="text-blue-100 text-lg">
-            فرصة ذهبية للتجار - أسعار خاصة على الكميات الكبيرة
-          </p>
+          <p class="text-blue-100 text-lg">- أسعار خاصة على الكميات الكبيرة</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
@@ -1388,8 +1389,8 @@
               </div>
             </div>
             <p class="text-blue-100 mb-6 leading-relaxed">
-              شركة رائدة في تجارة الأدوات المنزلية بالجملة، نقدم منتجات عالية
-              الجودة بأسعار تنافسية للتجار والموزعين.
+              رواد تجارة الجملة في الأدوات المنزلية، البلاستيك، الأحذية والشنط.
+              تشكيلة واسعة بأسعار تنافسية.
             </p>
             <div class="flex gap-3">
               <a
@@ -1448,6 +1449,14 @@
                   class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
                   ><i class="fas fa-chevron-left text-xs"></i> تواصل معنا</a
                 >
+              </li>
+              <li>
+                <a
+                  href="admin-login.html"
+                  class="text-blue-100 hover:text-armax-orange transition-colors flex items-center gap-2"
+                >
+                  <i class="fas fa-lock text-xs"></i> دخول المدير
+                </a>
               </li>
             </ul>
           </div>
@@ -1941,6 +1950,47 @@ ${itemsText}
           }
         });
       });
+    </script>
+    <script>
+      // التحقق من حالة تسجيل الدخول
+      function checkUserAuth() {
+        const userToken = localStorage.getItem("userToken");
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+        const headerActions = document.querySelector(".header-actions");
+
+        if (userToken && userData) {
+          // المستخدم مسجل دخول
+          headerActions.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-armax-blue/10 text-armax-blue dark:text-white dark:bg-white/10">
+            <img src="${userData.avatar || "https://ui-avatars.com/api/?name=" + encodeURIComponent(userData.name) + "&background=FF8C42&color=fff"}" 
+                 class="w-8 h-8 rounded-full border-2 border-armax-orange" />
+            <span class="font-bold text-sm">${userData.name}</span>
+          </div>
+          
+          <a href="profile.html" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white hover:bg-armax-orange hover:text-white transition-all" title="الملف الشخصي">
+            <i class="fas fa-user"></i>
+          </a>
+          
+          <button onclick="logout()" class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all" title="تسجيل الخروج">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      `;
+        }
+      }
+
+      function logout() {
+        if (confirm("هل أنت متأكد من تسجيل الخروج؟")) {
+          localStorage.removeItem("userToken");
+          localStorage.removeItem("userData");
+          window.location.reload();
+        }
+      }
+
+      // تشغيل عند تحميل الصفحة
+      document.addEventListener("DOMContentLoaded", checkUserAuth);
     </script>
   </body>
 </html>
