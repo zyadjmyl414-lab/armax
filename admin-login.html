@@ -151,6 +151,8 @@
     </div>
 
     <script>
+      /*
+      // تم تعليق كود التحقق من التوكن مؤقتاً
       const token = localStorage.getItem("adminToken");
       if (token) {
         console.log("تم العثور على توكن، جاري التوجيه...");
@@ -158,18 +160,17 @@
       } else {
         console.log("لا يوجد توكن، عرض صفحة الدخول");
       }
-      // ✅ 1. التحقق مما إذا كان مسجل دخول (باستخدام التوكن وليس قيمة منفصلة)
+      
       document.addEventListener("DOMContentLoaded", function () {
         const token = localStorage.getItem("adminToken");
 
         if (token) {
-          // ✅ 2. إضافة تأخير بسيط لمنع Loop السريع
           setTimeout(() => {
             window.location.replace("admin-dashboard.html");
-            // استخدم replace بدلاً من href لمنع الرجوع للخلف
           }, 100);
         }
       });
+      */
 
       function togglePassword() {
         const password = document.getElementById("password");
@@ -194,14 +195,16 @@
           const password = document.getElementById("password").value;
           const submitBtn = this.querySelector('button[type="submit"]');
 
-          // ✅ 3. منع الإرسال المتكرر أثناء المعالجة
+          // إظهار حالة التحميل
           submitBtn.disabled = true;
           submitBtn.innerHTML =
             '<i class="fas fa-spinner fa-spin"></i> جاري الدخول...';
 
+          /*
+          // تم تعليق كود الاتصال بالـ API مؤقتاً
           try {
             const response = await fetch(
-              "'api/login.php'",
+              "api/login.php",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -212,12 +215,10 @@
             const data = await response.json();
 
             if (data.success && data.token) {
-              // ✅ 4. حفظ جميع البيانات اللازمة
               localStorage.setItem("adminToken", data.token);
               localStorage.setItem("adminUser", JSON.stringify(data.user));
-              localStorage.setItem("adminLoggedIn", "true"); // مهم للتوافق
+              localStorage.setItem("adminLoggedIn", "true");
 
-              // ✅ 5. تأخير بسيط قبل التوجيه
               setTimeout(() => {
                 window.location.replace("admin-dashboard.html");
               }, 500);
@@ -232,6 +233,35 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
           }
+          */
+
+          // التحقق المحلي المؤقت (بدون قاعدة بيانات)
+          setTimeout(() => {
+            if (username === "admin" && password === "123456") {
+              // نجاح تسجيل الدخول
+              const fakeToken = "admin_local_token_" + Date.now();
+
+              localStorage.setItem("adminToken", fakeToken);
+              localStorage.setItem(
+                "adminUser",
+                JSON.stringify({
+                  name: "المسؤول",
+                  role: "admin",
+                  username: "admin",
+                }),
+              );
+              localStorage.setItem("adminLoggedIn", "true");
+
+              window.location.replace("admin-dashboard.html");
+            } else {
+              // فشل تسجيل الدخول
+              alert(
+                "خطأ في اسم المستخدم أو كلمة المرور!\n\nالبيانات الصحيحة:\nاسم المستخدم: admin\nكلمة المرور: 123456",
+              );
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
+            }
+          }, 800); // تأخير بسيط لإظهار حالة التحميل
         });
     </script>
   </body>
