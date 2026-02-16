@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>طلب عرض سعر | أرماكس Armax</title>
+    <title>نظام عروض الأسعار | أرماكس Armax</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,6 +21,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
       tailwind.config = {
@@ -48,682 +54,1236 @@
     <style>
       body {
         font-family: "Tajawal", sans-serif;
+        background: #f0f4f8;
       }
-      .glass-effect {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+
+      .quote-preview {
+        background: white;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+        width: 210mm;
+        margin: 0 auto;
+        position: relative;
       }
-      .dark .glass-effect {
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #quoteDocument,
+        #quoteDocument * {
+          visibility: visible;
+        }
+        #quoteDocument {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
       }
-      .input-field {
-        @apply w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all;
-      }
+
       .gradient-bg {
         background: linear-gradient(135deg, #003b6d 0%, #0056a3 100%);
       }
+
+      .input-field {
+        @apply w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all;
+      }
+
+      .product-row {
+        transition: all 0.3s ease;
+      }
+
+      .product-row:hover {
+        background: rgba(255, 140, 66, 0.05);
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #003b6d;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0056a3;
+      }
+
+      .stamp {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        border: 3px solid #003b6d;
+        color: #003b6d;
+        padding: 20px 40px;
+        font-size: 24px;
+        font-weight: 900;
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 0;
+      }
     </style>
   </head>
-  <body
-    class="bg-gray-50 dark:bg-armax-darker text-gray-800 dark:text-gray-100 transition-colors duration-300"
-  >
-    <!-- Loading Screen -->
-    <div
-      id="loader"
-      class="fixed inset-0 z-[100] bg-armax-blue flex items-center justify-center transition-opacity duration-500"
-    >
-      <div class="text-center">
-        <div
-          class="w-20 h-20 mx-auto mb-4 rounded-full bg-white p-3 animate-pulse"
-        >
-          <i class="fas fa-file-invoice-dollar text-4xl text-armax-orange"></i>
-        </div>
-        <div class="text-white text-2xl font-bold">طلب عرض سعر</div>
-      </div>
-    </div>
-
-    <!-- Navigation -->
+  <body class="text-gray-800">
+    <!-- Header -->
     <nav
-      id="navbar"
-      class="fixed w-full z-50 transition-all duration-300 bg-white/90 dark:bg-armax-dark/90 backdrop-blur-md shadow-lg"
+      class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200"
     >
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
-          <!-- Logo -->
-          <a href="index.html" class="flex items-center gap-3 group">
-            <div
-              class="relative overflow-hidden rounded-full bg-white p-1 shadow-lg"
-            >
-              <img
-                src="logo.jpeg"
-                alt="Armax Logo"
-                class="w-12 h-12 object-contain"
-                onerror="this.src = 'https://via.placeholder.com/48?text=A'"
-              />
-            </div>
-            <div>
-              <div
-                class="text-2xl font-black text-armax-blue dark:text-white leading-none"
-              >
-                أرمــاكس
-              </div>
-              <div class="text-xs text-armax-orange font-bold tracking-wider">
-                ARMAX
-              </div>
-            </div>
-          </a>
-
-          <!-- Desktop Menu -->
-          <div class="hidden lg:flex items-center gap-8">
-            <a
-              href="index.html#home"
-              class="text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
-              >الرئيسية</a
-            >
-            <a
-              href="index.html#products"
-              class="text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
-              >المنتجات</a
-            >
-            <a
-              href="index.html#about"
-              class="text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
-              >عن الشركة</a
-            >
-            <a
-              href="quote.html"
-              class="text-armax-orange font-bold border-b-2 border-armax-orange pb-1"
-              >طلب عرض سعر</a
-            >
-            <a
-              href="index.html#contact"
-              class="text-gray-700 dark:text-gray-200 font-bold hover:text-armax-orange transition-colors"
-              >تواصل معنا</a
-            >
-          </div>
-
-          <!-- Controls -->
           <div class="flex items-center gap-3">
-            <a
-              href="quote.html"
-              class="hidden md:flex items-center gap-2 px-5 py-2 bg-armax-orange text-white rounded-full font-bold hover:bg-armax-lightOrange transition-all shadow-lg"
-            >
-              <i class="fas fa-file-invoice-dollar"></i>
-              <span>طلب عرض سعر</span>
-            </a>
+            <div
+              class="w-20 h-20 rounded-full bg-[url('logo.jpeg')] bg-contain bg-center bg-no-repeat"
+            ></div>
 
-            <button
-              onclick="toggleDarkMode()"
-              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
-            >
-              <i class="fas fa-moon dark:hidden"></i>
-              <i class="fas fa-sun hidden dark:block"></i>
-            </button>
-
-            <button
-              onclick="toggleMobileMenu()"
-              class="lg:hidden w-10 h-10 rounded-lg bg-armax-blue text-white flex items-center justify-center"
-            >
-              <i class="fas fa-bars"></i>
-            </button>
+            <div>
+              <div class="text-xl font-black text-armax-blue">أرماكس</div>
+              <div class="text-xs text-gray-500">نظام عروض الأسعار</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div
-          id="mobileMenu"
-          class="lg:hidden hidden mt-4 pb-4 border-t dark:border-gray-700 pt-4"
-        >
-          <div class="flex flex-col gap-3">
-            <a
-              href="index.html"
-              class="text-gray-700 dark:text-gray-200 font-bold py-2"
-              >الرئيسية</a
+          <div class="flex items-center gap-3">
+            <button
+              onclick="loadTemplate()"
+              class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-all"
             >
-            <a
-              href="index.html#products"
-              class="text-gray-700 dark:text-gray-200 font-bold py-2"
-              >المنتجات</a
+              <i class="fas fa-file-import ml-2"></i>
+              تحميل قالب
+            </button>
+            <button
+              onclick="exportPDF()"
+              class="px-6 py-2 rounded-lg gradient-bg text-white font-bold hover:shadow-lg transition-all flex items-center gap-2"
             >
-            <a
-              href="index.html#about"
-              class="text-gray-700 dark:text-gray-200 font-bold py-2"
-              >عن الشركة</a
+              <i class="fas fa-file-pdf"></i>
+              تصدير PDF
+            </button>
+            <button
+              onclick="window.print()"
+              class="px-4 py-2 rounded-lg border-2 border-armax-blue text-armax-blue font-bold hover:bg-armax-blue hover:text-white transition-all"
             >
-            <a
-              href="quote.html"
-              class="text-armax-orange font-bold py-2 flex items-center gap-2"
-            >
-              <i class="fas fa-file-invoice-dollar"></i>
-              طلب عرض سعر
-            </a>
+              <i class="fas fa-print"></i>
+            </button>
           </div>
         </div>
       </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-16 gradient-bg overflow-hidden">
+    <!-- Main Content -->
+    <div class="pt-20 min-h-screen flex flex-col lg:flex-row">
+      <!-- Form Section -->
       <div
-        class="absolute inset-0 opacity-10"
-        style="
-          background-image: radial-gradient(
-            circle at 2px 2px,
-            white 1px,
-            transparent 0
-          );
-          background-size: 40px 40px;
-        "
-      ></div>
-      <div
-        class="absolute top-20 left-10 w-72 h-72 bg-armax-orange/20 rounded-full blur-3xl"
-      ></div>
-
-      <div class="container mx-auto px-4 relative z-10 text-center">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white mb-6 border border-white/20"
-        >
-          <i class="fas fa-tag text-armax-orange"></i>
-          <span class="font-bold">أسعار خاصة للتجار</span>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
-          اطلب عرض سعر مخصص
-        </h1>
-        <p class="text-blue-100 text-lg max-w-2xl mx-auto">
-          احصل على عرض سعر مفصل لطلبات الجملة خلال 24 ساعة. نضمن لك أفضل الأسعار
-          التنافسية وخدمة متميزة.
-        </p>
-      </div>
-    </section>
-
-    <!-- Quote Form Section -->
-    <section class="py-16 bg-gray-50 dark:bg-armax-darker">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <!-- Features -->
-          <div class="grid md:grid-cols-3 gap-6 mb-12">
-            <div
-              class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center"
-            >
-              <div
-                class="w-14 h-14 rounded-full bg-armax-blue/10 text-armax-blue flex items-center justify-center text-2xl mx-auto mb-4"
-              >
-                <i class="fas fa-bolt"></i>
-              </div>
-              <h3 class="font-bold text-lg mb-2">رد سريع</h3>
-              <p class="text-gray-600 dark:text-gray-400 text-sm">
-                استلام العرض خلال 24 ساعة
-              </p>
-            </div>
-            <div
-              class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center"
-            >
-              <div
-                class="w-14 h-14 rounded-full bg-armax-orange/10 text-armax-orange flex items-center justify-center text-2xl mx-auto mb-4"
-              >
-                <i class="fas fa-tags"></i>
-              </div>
-              <h3 class="font-bold text-lg mb-2">أسعار تنافسية</h3>
-              <p class="text-gray-600 dark:text-gray-400 text-sm">
-                خصومات خاصة للكميات
-              </p>
-            </div>
-            <div
-              class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center"
-            >
-              <div
-                class="w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-2xl mx-auto mb-4"
-              >
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <h3 class="font-bold text-lg mb-2">ضمان الجودة</h3>
-              <p class="text-gray-600 dark:text-gray-400 text-sm">
-                منتجات معتمدة ومضمونة
-              </p>
-            </div>
-          </div>
-
-          <!-- Form Card -->
-          <div
-            class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden"
+        class="w-full lg:w-5/12 bg-white border-l border-gray-200 h-screen overflow-y-auto p-6 shadow-xl z-10"
+      >
+        <div class="max-w-2xl mx-auto">
+          <h2
+            class="text-2xl font-black text-gray-800 mb-6 flex items-center gap-3"
           >
-            <div
-              class="bg-gradient-to-r from-armax-blue to-armax-lightBlue p-6 text-white"
+            <span
+              class="w-10 h-10 rounded-full bg-armax-orange text-white flex items-center justify-center text-lg"
             >
-              <h2 class="text-2xl font-bold flex items-center gap-3">
-                <i class="fas fa-clipboard-list"></i>
-                تفاصيل الطلب
-              </h2>
-              <p class="text-blue-100 mt-2">
-                املأ النموذج التالي وسنقوم بالتواصل معك في أقرب وقت
-              </p>
-            </div>
+              <i class="fas fa-pen"></i>
+            </span>
+            بيانات عرض السعر
+          </h2>
 
-            <form id="quoteForm" class="p-8 space-y-6">
-              <!-- Personal Info -->
-              <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                  >
-                    <i class="fas fa-user text-armax-orange ml-2"></i>
-                    الاسم الكامل <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    required
-                    class="input-field"
-                    placeholder="محمد أحمد عبدالله"
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                  >
-                    <i class="fas fa-phone text-armax-orange ml-2"></i>
-                    رقم الجوال <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    required
-                    class="input-field"
-                    placeholder="05XXXXXXXX"
-                    dir="ltr"
-                  />
-                </div>
-              </div>
-
-              <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                  >
-                    <i class="fas fa-envelope text-armax-orange ml-2"></i>
-                    البريد الإلكتروني
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    class="input-field"
-                    placeholder="example@email.com"
-                    dir="ltr"
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                  >
-                    <i class="fas fa-building text-armax-orange ml-2"></i>
-                    اسم المتجر/الشركة <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    required
-                    class="input-field"
-                    placeholder="مؤسسة التوفيق التجارية"
-                  />
-                </div>
-              </div>
-
-              <!-- Business Type -->
+          <form
+            id="quoteForm"
+            class="space-y-5"
+            onsubmit="event.preventDefault()"
+          >
+            <!-- رقم العرض والتاريخ -->
+            <div class="grid grid-cols-2 gap-4">
               <div>
-                <label
-                  class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                <label class="block text-sm font-bold text-gray-700 mb-2"
+                  >رقم العرض</label
                 >
-                  <i class="fas fa-store text-armax-orange ml-2"></i>
-                  نوع النشاط التجاري <span class="text-red-500">*</span>
-                </label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="businessType"
-                      value="محل تجاري"
-                      class="peer sr-only"
-                      checked
-                    />
-                    <div
-                      class="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 peer-checked:border-armax-orange peer-checked:bg-armax-orange/5 text-center transition-all hover:border-armax-orange"
-                    >
-                      <i
-                        class="fas fa-shop text-2xl mb-2 text-gray-400 peer-checked:text-armax-orange"
-                      ></i>
-                      <div class="text-sm font-bold">محل تجاري</div>
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="businessType"
-                      value="هايبرماركت"
-                      class="peer sr-only"
-                    />
-                    <div
-                      class="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 peer-checked:border-armax-orange peer-checked:bg-armax-orange/5 text-center transition-all hover:border-armax-orange"
-                    >
-                      <i
-                        class="fas fa-building text-2xl mb-2 text-gray-400 peer-checked:text-armax-orange"
-                      ></i>
-                      <div class="text-sm font-bold">هايبرماركت</div>
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="businessType"
-                      value="متجر إلكتروني"
-                      class="peer sr-only"
-                    />
-                    <div
-                      class="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 peer-checked:border-armax-orange peer-checked:bg-armax-orange/5 text-center transition-all hover:border-armax-orange"
-                    >
-                      <i
-                        class="fas fa-laptop text-2xl mb-2 text-gray-400 peer-checked:text-armax-orange"
-                      ></i>
-                      <div class="text-sm font-bold">متجر إلكتروني</div>
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="businessType"
-                      value="مشروع جديد"
-                      class="peer sr-only"
-                    />
-                    <div
-                      class="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 peer-checked:border-armax-orange peer-checked:bg-armax-orange/5 text-center transition-all hover:border-armax-orange"
-                    >
-                      <i
-                        class="fas fa-rocket text-2xl mb-2 text-gray-400 peer-checked:text-armax-orange"
-                      ></i>
-                      <div class="text-sm font-bold">مشروع جديد</div>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Products Details -->
-              <div>
-                <label
-                  class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                >
-                  <i class="fas fa-boxes text-armax-orange ml-2"></i>
-                  المنتجات المطلوبة والكميات <span class="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="products"
-                  rows="5"
-                  required
-                  class="input-field resize-none"
-                  placeholder="مثال:&#10;- طقم قدور جرانيت 12 قطعة: 20 طقم&#10;- خلاط كهربائي 1000 واط: 15 قطعة&#10;- حافظات طعام: 50 طقم"
-                ></textarea>
-                <p class="text-sm text-gray-500 mt-2">
-                  اذكر اسم المنتج والكمية المطلوبة لكل صنف
-                </p>
-              </div>
-
-              <!-- Additional Notes -->
-              <div>
-                <label
-                  class="block text-gray-700 dark:text-gray-300 font-bold mb-2"
-                >
-                  <i class="fas fa-comment-dots text-armax-orange ml-2"></i>
-                  ملاحظات إضافية
-                </label>
-                <textarea
-                  id="notes"
-                  rows="3"
-                  class="input-field resize-none"
-                  placeholder="أي تفاصيل إضافية مثل: موقع التوصيل، موعد التسليم المطلوب، إلخ..."
-                ></textarea>
-              </div>
-
-              <!-- Submit Button -->
-              <button
-                type="submit"
-                id="submitBtn"
-                class="w-full py-4 rounded-xl bg-gradient-to-r from-armax-orange to-armax-lightOrange text-white font-bold text-lg hover:shadow-xl hover:shadow-armax-orange/30 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3"
-              >
-                <i class="fas fa-paper-plane"></i>
-                <span>إرسال الطلب الآن</span>
-              </button>
-
-              <p class="text-center text-sm text-gray-500 dark:text-gray-400">
-                <i class="fas fa-lock text-armax-blue ml-1"></i>
-                بياناتك آمنة ومشفرة. لن يتم مشاركتها مع أي طرف ثالث.
-              </p>
-            </form>
-          </div>
-
-          <!-- Alternative Contact -->
-          <div class="mt-8 text-center">
-            <p class="text-gray-600 dark:text-gray-400 mb-4">
-              أو تواصل معنا مباشرة عبر
-            </p>
-            <div class="flex justify-center gap-4">
-              <a
-                href="https://wa.me/966501234567"
-                target="_blank"
-                class="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-full font-bold hover:bg-green-600 transition-all"
-              >
-                <i class="fab fa-whatsapp text-xl"></i>
-                <span>واتساب</span>
-              </a>
-              <a
-                href="tel:920012345"
-                class="flex items-center gap-2 px-6 py-3 bg-armax-blue text-white rounded-full font-bold hover:bg-armax-lightBlue transition-all"
-              >
-                <i class="fas fa-phone"></i>
-                <span>اتصل بنا</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-armax-blue dark:bg-armax-darker text-white pt-16 pb-8">
-      <div class="container mx-auto px-4">
-        <div
-          class="grid md:grid-cols-3 gap-8 mb-8 border-b border-white/20 pb-8"
-        >
-          <div>
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-full bg-white p-1">
-                <img
-                  src="logo.jpeg"
-                  alt="Armax"
-                  class="w-full h-full object-contain rounded-full"
-                  onerror="
-                    this.style.display = 'none';
-                    this.parentElement.innerHTML =
-                      '<span class=text-armax-blue font-bold text-xl>أ</span>';
-                  "
+                <input
+                  type="text"
+                  id="quoteNumber"
+                  class="input-field font-bold text-armax-blue"
+                  readonly
                 />
               </div>
               <div>
-                <div class="text-xl font-black">أرماكس</div>
-                <div class="text-armax-orange text-xs">ARMAX</div>
+                <label class="block text-sm font-bold text-gray-700 mb-2"
+                  >تاريخ الإصدار</label
+                >
+                <input type="date" id="quoteDate" class="input-field" />
               </div>
             </div>
-            <p class="text-blue-100 text-sm">
-              شريكك الموثوق في تجارة الأدوات المنزلية بالجملة.
-            </p>
+
+            <!-- صلاحية العرض -->
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-2"
+                >سريان العرض (يوم)</label
+              >
+              <select
+                id="validityDays"
+                class="input-field"
+                onchange="updateValidityDate()"
+              >
+                <option value="7">7 أيام</option>
+                <option value="14" selected>14 يوم</option>
+                <option value="30">30 يوم</option>
+              </select>
+            </div>
+
+            <!-- بيانات العميل -->
+            <div class="border-t border-gray-200 pt-5">
+              <h3
+                class="text-lg font-bold text-armax-blue mb-4 flex items-center gap-2"
+              >
+                <i class="fas fa-user-tie text-armax-orange"></i>
+                بيانات العميل
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >اسم الشركة / العميل
+                    <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="clientName"
+                    class="input-field"
+                    placeholder="مؤسسة التوفيق التجارية"
+                    oninput="updatePreview()"
+                  />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2"
+                      >الهاتف</label
+                    >
+                    <input
+                      type="tel"
+                      id="clientPhone"
+                      class="input-field"
+                      placeholder="05xxxxxxxx"
+                      dir="ltr"
+                      oninput="updatePreview()"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2"
+                      >البريد الإلكتروني</label
+                    >
+                    <input
+                      type="email"
+                      id="clientEmail"
+                      class="input-field"
+                      placeholder="email@example.com"
+                      dir="ltr"
+                      oninput="updatePreview()"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >العنوان</label
+                  >
+                  <textarea
+                    id="clientAddress"
+                    rows="2"
+                    class="input-field resize-none"
+                    placeholder="المدينة، الحي، الشارع"
+                    oninput="updatePreview()"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- المنتجات -->
+            <div class="border-t border-gray-200 pt-5">
+              <div class="flex items-center justify-between mb-4">
+                <h3
+                  class="text-lg font-bold text-armax-blue flex items-center gap-2"
+                >
+                  <i class="fas fa-boxes text-armax-orange"></i>
+                  المنتجات
+                </h3>
+                <button
+                  type="button"
+                  onclick="addProduct()"
+                  class="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-bold hover:bg-green-600 transition-all flex items-center gap-2"
+                >
+                  <i class="fas fa-plus"></i>
+                  إضافة صنف
+                </button>
+              </div>
+
+              <div id="productsList" class="space-y-3">
+                <!-- المنتجات ستضاف هنا ديناميكياً -->
+              </div>
+            </div>
+
+            <!-- الخصم والضريبة -->
+            <div class="border-t border-gray-200 pt-5">
+              <h3 class="text-lg font-bold text-armax-blue mb-4">الحسابات</h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >نسبة الخصم (%)</label
+                  >
+                  <input
+                    type="number"
+                    id="discountPercent"
+                    class="input-field"
+                    value="0"
+                    min="0"
+                    max="100"
+                    oninput="calculateTotals()"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >نسبة الضريبة (%)</label
+                  >
+                  <input
+                    type="number"
+                    id="taxPercent"
+                    class="input-field"
+                    value="15"
+                    min="0"
+                    max="100"
+                    oninput="calculateTotals()"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- الشروط والملاحظات -->
+            <div class="border-t border-gray-200 pt-5">
+              <h3 class="text-lg font-bold text-armax-blue mb-4">
+                الشروط والملاحظات
+              </h3>
+              <textarea
+                id="terms"
+                rows="4"
+                class="input-field resize-none text-sm"
+                oninput="updatePreview()"
+              >
+• الأسعار تشمل الضريبة المضافة
+• العرض ساري لمدة 14 يوم من تاريخ الإصدار
+• التوصيل مجاني للطلبات فوق 5000 ريال
+• الدفع عند الاستلام أو تحويل بنكي</textarea
+              >
+            </div>
+
+            <!-- توقيع المسؤول -->
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-2"
+                >اسم المسؤول</label
+              >
+              <input
+                type="text"
+                id="managerName"
+                class="input-field"
+                value="خالد حمود علي"
+                oninput="updatePreview()"
+              />
+            </div>
+
+            <!-- حفظ في المتصفح -->
+            <!-- أزرار التحكم -->
+            <div class="flex gap-3 pt-4">
+              <button
+                type="button"
+                onclick="saveQuoteToDatabase()"
+                class="flex-1 py-3 rounded-xl gradient-bg text-white font-bold hover:shadow-lg transition-all"
+              >
+                <i class="fas fa-database ml-2"></i>
+                حفظ في قاعدة البيانات
+              </button>
+              <button
+                type="button"
+                onclick="loadQuotesList()"
+                class="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-all"
+              >
+                <i class="fas fa-list"></i>
+                قائمة العروض
+              </button>
+              <button
+                type="button"
+                onclick="resetForm()"
+                class="px-4 py-3 rounded-xl border-2 border-red-200 text-red-600 font-bold hover:bg-red-50 transition-all"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="w-full lg:w-7/12 bg-gray-100 p-8 overflow-y-auto">
+        <div class="sticky top-0">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-700">معاينة العرض</h3>
+            <div class="flex gap-2">
+              <span
+                class="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border"
+              >
+                <i class="fas fa-eye ml-1"></i>
+                معاينة حية
+              </span>
+            </div>
           </div>
-          <div>
-            <h4 class="font-bold mb-4">روابط سريعة</h4>
-            <ul class="space-y-2 text-sm text-blue-100">
-              <li>
-                <a
-                  href="index.html"
-                  class="hover:text-armax-orange transition-colors"
-                  >الرئيسية</a
-                >
-              </li>
-              <li>
-                <a
-                  href="index.html#products"
-                  class="hover:text-armax-orange transition-colors"
-                  >المنتجات</a
-                >
-              </li>
-              <li>
-                <a
-                  href="quote.html"
-                  class="hover:text-armax-orange transition-colors"
-                  >طلب عرض سعر</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-bold mb-4">تواصل معنا</h4>
-            <div class="text-sm text-blue-100 space-y-2">
-              <p><i class="fas fa-phone ml-2"></i>9200XXXXX</p>
-              <p><i class="fas fa-envelope ml-2"></i>info@armax.com</p>
+
+          <!-- A4 Document -->
+          <div id="quoteDocument" class="quote-preview p-12 relative">
+            <!-- ختم مائي -->
+            <div class="stamp" id="watermark">عرض سعر</div>
+
+            <!-- Header -->
+            <div
+              class="flex justify-between items-start mb-8 border-b-2 border-armax-blue pb-6"
+            >
+              <div class="flex-1">
+                <div class="flex items-center gap-4 mb-4">
+                  <div
+                    class="w-20 h-20 rounded-full bg-[url('logo.jpeg')] bg-contain bg-center bg-no-repeat"
+                  ></div>
+
+                  <div>
+                    <h1 class="text-3xl font-black text-armax-blue">
+                      أرماكس للتجارة
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">
+                      أدوات منزلية - بلاستيك - أحذية وشنط
+                    </p>
+                  </div>
+                </div>
+                <div class="text-sm text-gray-600 space-y-1">
+                  <p>
+                    <i class="fas fa-map-marker-alt w-5 text-armax-orange"></i>
+                    الرياض، المملكة العربية السعودية
+                  </p>
+                  <p>
+                    <i class="fas fa-phone w-5 text-armax-orange"></i> 9200XXXXX
+                  </p>
+                  <p>
+                    <i class="fas fa-envelope w-5 text-armax-orange"></i>
+                    info@armax.com
+                  </p>
+                </div>
+              </div>
+
+              <div class="text-left">
+                <div class="bg-armax-blue text-white px-6 py-3 rounded-lg mb-3">
+                  <div class="text-sm opacity-80">رقم العرض</div>
+                  <div class="text-2xl font-black" id="previewQuoteNum">
+                    #Q-001
+                  </div>
+                </div>
+                <div class="text-sm text-gray-600">
+                  <div class="mb-1">
+                    التاريخ:
+                    <span id="previewDate" class="font-bold">2024/01/15</span>
+                  </div>
+                  <div>
+                    الصلاحية:
+                    <span id="previewValidity" class="font-bold text-red-600"
+                      >2024/01/29</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client Info -->
+            <div class="bg-gray-50 rounded-xl p-6 mb-8">
+              <h3
+                class="text-armax-blue font-bold mb-3 text-lg border-r-4 border-armax-orange pr-3"
+              >
+                بيانات العميل
+              </h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <span class="text-gray-500 text-sm">العميل:</span>
+                  <p class="font-bold text-gray-800 text-lg" id="previewClient">
+                    ---
+                  </p>
+                </div>
+                <div>
+                  <span class="text-gray-500 text-sm">الهاتف:</span>
+                  <p class="font-bold text-gray-800" id="previewPhone">---</p>
+                </div>
+                <div class="col-span-2">
+                  <span class="text-gray-500 text-sm">العنوان:</span>
+                  <p class="font-bold text-gray-800" id="previewAddress">---</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Products Table -->
+            <table class="w-full mb-8">
+              <thead>
+                <tr class="bg-armax-blue text-white">
+                  <th class="py-3 px-4 text-right rounded-tr-lg">#</th>
+                  <th class="py-3 px-4 text-right">الصنف</th>
+                  <th class="py-3 px-4 text-center">الوحدة</th>
+                  <th class="py-3 px-4 text-center">الكمية</th>
+                  <th class="py-3 px-4 text-center">السعر</th>
+                  <th class="py-3 px-4 text-center">الخصم</th>
+                  <th class="py-3 px-4 text-left rounded-tl-lg">الإجمالي</th>
+                </tr>
+              </thead>
+              <tbody id="previewProducts">
+                <!-- Products will be inserted here -->
+              </tbody>
+              <tfoot class="bg-gray-50 font-bold">
+                <tr>
+                  <td colspan="6" class="py-3 px-4 text-left">المجموع:</td>
+                  <td class="py-3 px-4 text-left" id="previewSubtotal">
+                    0 ر.س
+                  </td>
+                </tr>
+                <tr id="previewDiscountRow" class="text-green-600 hidden">
+                  <td colspan="6" class="py-2 px-4 text-left">الخصم:</td>
+                  <td class="py-2 px-4 text-left" id="previewDiscount">
+                    0 ر.س
+                  </td>
+                </tr>
+                <tr class="text-armax-blue">
+                  <td colspan="6" class="py-2 px-4 text-left">
+                    الضريبة (15%):
+                  </td>
+                  <td class="py-2 px-4 text-left" id="previewTax">0 ر.س</td>
+                </tr>
+                <tr class="text-xl bg-armax-orange text-white">
+                  <td colspan="6" class="py-4 px-4 text-left rounded-br-lg">
+                    الإجمالي النهائي:
+                  </td>
+                  <td
+                    class="py-4 px-4 text-left rounded-bl-lg"
+                    id="previewTotal"
+                  >
+                    0 ر.س
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <!-- Terms -->
+            <div class="mb-12">
+              <h3
+                class="text-armax-blue font-bold mb-3 text-lg border-r-4 border-armax-orange pr-3"
+              >
+                الشروط والأحكام
+              </h3>
+              <div
+                class="text-sm text-gray-600 leading-relaxed whitespace-pre-line bg-gray-50 p-4 rounded-lg"
+                id="previewTerms"
+              ></div>
+            </div>
+
+            <!-- Signature -->
+            <div
+              class="flex justify-between items-end mt-12 pt-8 border-t border-gray-200"
+            >
+              <div class="text-center">
+                <div class="w-48 border-b-2 border-gray-400 mb-2"></div>
+                <p class="font-bold text-gray-800" id="previewManager">
+                  خالد حمود علي
+                </p>
+                <p class="text-sm text-gray-500">المسؤول عن المبيعات</p>
+              </div>
+
+              <div class="text-center">
+                <div id="qrcode" class="mb-2"></div>
+                <p class="text-xs text-gray-500">امسح للتواصل</p>
+              </div>
+
+              <div class="text-left">
+                <div class="bg-gray-100 px-4 py-2 rounded-lg">
+                  <p class="text-xs text-gray-500">
+                    تم إنشاء هذا العرض إلكترونياً
+                  </p>
+                  <p class="text-xs text-gray-500" id="previewTimestamp"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="absolute bottom-4 left-0 right-0 text-center">
+              <p class="text-xs text-gray-400">
+                أرماكس للتجارة - س.ت: 123456789 - www.armax.com
+              </p>
             </div>
           </div>
         </div>
-        <div class="text-center text-blue-200 text-sm">
-          © 2026 أرماكس. جميع الحقوق محفوظة.
-        </div>
       </div>
-    </footer>
+    </div>
 
-    <!-- Toast Notification -->
+    <!-- Notification Toast -->
     <div
       id="toast"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl z-50 translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-armax-blue text-white px-6 py-3 rounded-full shadow-2xl z-50 translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3"
     >
-      <i class="fas fa-check-circle"></i>
-      <span id="toastMessage">تم إرسال طلبك بنجاح!</span>
+      <i class="fas fa-check-circle text-armax-orange"></i>
+      <span id="toastMessage">تمت العملية بنجاح</span>
     </div>
 
     <script>
-      // Remove loader
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          document.getElementById("loader").style.opacity = "0";
-          setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
-          }, 500);
-        }, 800);
+      // تهيئة النموذج
+      let productCounter = 0;
+      let products = [];
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // توليد رقم عرض تلقائي
+        const today = new Date();
+        const quoteNum =
+          "Q-" +
+          today.getFullYear().toString().substr(-2) +
+          String(today.getMonth() + 1).padStart(2, "0") +
+          String(today.getDate()).padStart(2, "0") +
+          "-" +
+          Math.floor(Math.random() * 1000)
+            .toString()
+            .padStart(3, "0");
+
+        document.getElementById("quoteNumber").value = quoteNum;
+        document.getElementById("quoteDate").valueAsDate = today;
+
+        updateValidityDate();
+        addProduct();
+        updatePreview();
+
+        // تحميل QR Code
+        new QRCode(document.getElementById("qrcode"), {
+          text: "https://wa.me/966500000000",
+          width: 64,
+          height: 64,
+          colorDark: "#003B6D",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
       });
 
-      // Dark Mode
-      function toggleDarkMode() {
-        document.documentElement.classList.toggle("dark");
+      // إضافة منتج جديد
+      function addProduct() {
+        productCounter++;
+        const div = document.createElement("div");
+        div.className =
+          "product-row bg-gray-50 p-4 rounded-xl border border-gray-200 relative";
+        div.innerHTML = `
+                <button type="button" onclick="removeProduct(this)" class="absolute top-2 left-2 text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="grid grid-cols-12 gap-3">
+                    <div class="col-span-6">
+                        <label class="block text-xs font-bold text-gray-600 mb-1">اسم الصنف</label>
+                        <input type="text" class="input-field py-2 text-sm product-name" placeholder="مثال: طقم قدور جرانيت" oninput="updatePreview()">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-gray-600 mb-1">الوحدة</label>
+                        <select class="input-field py-2 text-sm product-unit" onchange="updatePreview()">
+                            <option value="قطعة">قطعة</option>
+                            <option value="طقم">طقم</option>
+                            <option value="كرتون">كرتون</option>
+                            <option value="كيلو">كيلو</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-gray-600 mb-1">الكمية</label>
+                        <input type="number" class="input-field py-2 text-sm product-qty" value="1" min="1" oninput="calculateTotals()">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-gray-600 mb-1">السعر</label>
+                        <input type="number" class="input-field py-2 text-sm product-price" placeholder="0.00" min="0" step="0.01" oninput="calculateTotals()">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">الوصف (اختياري)</label>
+                    <input type="text" class="input-field py-2 text-sm product-desc" placeholder="مواصفات إضافية..." oninput="updatePreview()">
+                </div>
+            `;
+
+        document.getElementById("productsList").appendChild(div);
+        updatePreview();
+      }
+
+      // حذف منتج
+      function removeProduct(btn) {
+        if (document.querySelectorAll(".product-row").length > 1) {
+          btn.closest(".product-row").remove();
+          calculateTotals();
+        } else {
+          showToast("يجب أن يحتوي العرض على صنف واحد على الأقل", "error");
+        }
+      }
+
+      // حساب الإجماليات
+      function calculateTotals() {
+        let subtotal = 0;
+        const rows = document.querySelectorAll(".product-row");
+
+        rows.forEach((row) => {
+          const qty = parseFloat(row.querySelector(".product-qty").value) || 0;
+          const price =
+            parseFloat(row.querySelector(".product-price").value) || 0;
+          subtotal += qty * price;
+        });
+
+        const discountPercent =
+          parseFloat(document.getElementById("discountPercent").value) || 0;
+        const taxPercent =
+          parseFloat(document.getElementById("taxPercent").value) || 0;
+
+        const discountAmount = subtotal * (discountPercent / 100);
+        const afterDiscount = subtotal - discountAmount;
+        const taxAmount = afterDiscount * (taxPercent / 100);
+        const total = afterDiscount + taxAmount;
+
+        // تحديث المعاينة
+        document.getElementById("previewSubtotal").textContent =
+          formatCurrency(subtotal);
+        document.getElementById("previewDiscount").textContent =
+          formatCurrency(discountAmount);
+        document.getElementById("previewTax").textContent =
+          formatCurrency(taxAmount);
+        document.getElementById("previewTotal").textContent =
+          formatCurrency(total);
+
+        // إظهار/إخفاء صف الخصم
+        const discountRow = document.getElementById("previewDiscountRow");
+        if (discountPercent > 0) {
+          discountRow.classList.remove("hidden");
+        } else {
+          discountRow.classList.add("hidden");
+        }
+
+        updateProductsTable();
+      }
+
+      // تحديث جدول المنتجات في المعاينة
+      function updateProductsTable() {
+        const tbody = document.getElementById("previewProducts");
+        tbody.innerHTML = "";
+
+        const rows = document.querySelectorAll(".product-row");
+        let index = 1;
+
+        rows.forEach((row) => {
+          const name = row.querySelector(".product-name").value || "صنف جديد";
+          const desc = row.querySelector(".product-desc").value;
+          const unit = row.querySelector(".product-unit").value;
+          const qty = parseFloat(row.querySelector(".product-qty").value) || 0;
+          const price =
+            parseFloat(row.querySelector(".product-price").value) || 0;
+          const total = qty * price;
+
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-gray-100 hover:bg-gray-50";
+          tr.innerHTML = `
+                    <td class="py-3 px-4 text-gray-600">${index}</td>
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-gray-800">${name}</div>
+                        ${desc ? `<div class="text-xs text-gray-500">${desc}</div>` : ""}
+                    </td>
+                    <td class="py-3 px-4 text-center text-gray-600">${unit}</td>
+                    <td class="py-3 px-4 text-center font-bold">${qty}</td>
+                    <td class="py-3 px-4 text-center text-gray-600">${formatCurrency(price)}</td>
+                    <td class="py-3 px-4 text-center">-</td>
+                    <td class="py-3 px-4 text-left font-bold text-armax-blue">${formatCurrency(total)}</td>
+                `;
+          tbody.appendChild(tr);
+          index++;
+        });
+      }
+
+      // تحديث المعاينة العامة
+      function updatePreview() {
+        document.getElementById("previewQuoteNum").textContent =
+          "#" + document.getElementById("quoteNumber").value;
+        document.getElementById("previewDate").textContent = formatDate(
+          document.getElementById("quoteDate").value,
+        );
+
+        document.getElementById("previewClient").textContent =
+          document.getElementById("clientName").value || "---";
+        document.getElementById("previewPhone").textContent =
+          document.getElementById("clientPhone").value || "---";
+        document.getElementById("previewAddress").textContent =
+          document.getElementById("clientAddress").value || "---";
+        document.getElementById("previewManager").textContent =
+          document.getElementById("managerName").value;
+        document.getElementById("previewTerms").textContent =
+          document.getElementById("terms").value;
+        document.getElementById("previewTimestamp").textContent =
+          new Date().toLocaleString("ar-SA");
+
+        calculateTotals();
+      }
+
+      // تحديث تاريخ الصلاحية
+      function updateValidityDate() {
+        const date = new Date(document.getElementById("quoteDate").value);
+        const days = parseInt(document.getElementById("validityDays").value);
+        date.setDate(date.getDate() + days);
+        document.getElementById("previewValidity").textContent =
+          formatDate(date);
+        document.getElementById("previewValidity").className =
+          days <= 7 ? "font-bold text-orange-600" : "font-bold text-green-600";
+      }
+
+      // تصدير PDF
+      function exportPDF() {
+        const element = document.getElementById("quoteDocument");
+        const quoteNum = document.getElementById("quoteNumber").value;
+        const clientName =
+          document.getElementById("clientName").value || "عميل";
+
+        const opt = {
+          margin: 0,
+          filename: `عرض-سعر-${quoteNum}-${clientName}.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+          },
+          jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait",
+            putOnlyUsedFonts: true,
+          },
+        };
+
+        // إظهار رسالة تحميل
+        showToast("جاري إنشاء ملف PDF...");
+
+        html2pdf()
+          .set(opt)
+          .from(element)
+          .save()
+          .then(() => {
+            showToast("تم تحميل ملف PDF بنجاح!");
+          })
+          .catch((err) => {
+            console.error(err);
+            showToast("حدث خطأ في التصدير", "error");
+          });
+      }
+
+      // حفظ المسودة
+      function saveQuote() {
+        const data = {
+          quoteNumber: document.getElementById("quoteNumber").value,
+          date: document.getElementById("quoteDate").value,
+          client: {
+            name: document.getElementById("clientName").value,
+            phone: document.getElementById("clientPhone").value,
+            email: document.getElementById("clientEmail").value,
+            address: document.getElementById("clientAddress").value,
+          },
+          products: [],
+          discount: document.getElementById("discountPercent").value,
+          tax: document.getElementById("taxPercent").value,
+          terms: document.getElementById("terms").value,
+          manager: document.getElementById("managerName").value,
+        };
+
+        // جمع المنتجات
+        document.querySelectorAll(".product-row").forEach((row) => {
+          data.products.push({
+            name: row.querySelector(".product-name").value,
+            desc: row.querySelector(".product-desc").value,
+            unit: row.querySelector(".product-unit").value,
+            qty: row.querySelector(".product-qty").value,
+            price: row.querySelector(".product-price").value,
+          });
+        });
+
         localStorage.setItem(
-          "darkMode",
-          document.documentElement.classList.contains("dark"),
+          "armax_quote_" + data.quoteNumber,
+          JSON.stringify(data),
+        );
+        showToast(
+          "تم حفظ المسودة بنجاح! (رقم العرض: " + data.quoteNumber + ")",
         );
       }
 
-      if (localStorage.getItem("darkMode") === "true") {
-        document.documentElement.classList.add("dark");
+      // تحميل قالب
+      function loadTemplate() {
+        const saved = Object.keys(localStorage).filter((k) =>
+          k.startsWith("armax_quote_"),
+        );
+        if (saved.length > 0) {
+          const lastQuote = saved[saved.length - 1];
+          const data = JSON.parse(localStorage.getItem(lastQuote));
+
+          if (
+            confirm("هل تريد تحميل آخر عرض محفوظ (" + data.quoteNumber + ")؟")
+          ) {
+            // استعادة البيانات
+            document.getElementById("clientName").value =
+              data.client.name || "";
+            document.getElementById("clientPhone").value =
+              data.client.phone || "";
+            document.getElementById("clientEmail").value =
+              data.client.email || "";
+            document.getElementById("clientAddress").value =
+              data.client.address || "";
+            document.getElementById("discountPercent").value =
+              data.discount || 0;
+            document.getElementById("taxPercent").value = data.tax || 15;
+            document.getElementById("terms").value = data.terms || "";
+            document.getElementById("managerName").value = data.manager || "";
+
+            // استعادة المنتجات
+            document.getElementById("productsList").innerHTML = "";
+            data.products.forEach((prod) => {
+              addProduct();
+              const lastRow =
+                document.querySelectorAll(".product-row")[
+                  document.querySelectorAll(".product-row").length - 1
+                ];
+              lastRow.querySelector(".product-name").value = prod.name;
+              lastRow.querySelector(".product-desc").value = prod.desc || "";
+              lastRow.querySelector(".product-unit").value = prod.unit;
+              lastRow.querySelector(".product-qty").value = prod.qty;
+              lastRow.querySelector(".product-price").value = prod.price;
+            });
+
+            updatePreview();
+            showToast("تم تحميل البيانات بنجاح");
+          }
+        } else {
+          showToast("لا توجد مسودات محفوظة", "error");
+        }
       }
 
-      // Mobile Menu
-      function toggleMobileMenu() {
-        const menu = document.getElementById("mobileMenu");
-        menu.classList.toggle("hidden");
+      // إعادة تعيين النموذج
+      function resetForm() {
+        if (confirm("هل أنت متأكد من حذف جميع البيانات؟")) {
+          document.getElementById("quoteForm").reset();
+          document.getElementById("productsList").innerHTML = "";
+          productCounter = 0;
+
+          // إعادة تهيئة
+          const today = new Date();
+          document.getElementById("quoteDate").valueAsDate = today;
+          addProduct();
+          updatePreview();
+          showToast("تم إعادة تعيين النموذج");
+        }
       }
 
-      // Toast
+      // مساعدات
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat("ar-SA", {
+          style: "currency",
+          currency: "SAR",
+          minimumFractionDigits: 2,
+        }).format(amount);
+      }
+
+      function formatDate(dateInput) {
+        if (!dateInput) return "";
+        const date = new Date(dateInput);
+        return date.toLocaleDateString("ar-SA", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+      }
+
       function showToast(message, type = "success") {
         const toast = document.getElementById("toast");
         const toastMessage = document.getElementById("toastMessage");
+        const icon = toast.querySelector("i");
+
         toastMessage.textContent = message;
 
         if (type === "error") {
-          toast.classList.remove("bg-green-500");
+          toast.classList.remove("bg-armax-blue");
           toast.classList.add("bg-red-500");
+          icon.className = "fas fa-exclamation-circle";
         } else {
           toast.classList.remove("bg-red-500");
-          toast.classList.add("bg-green-500");
+          toast.classList.add("bg-armax-blue");
+          icon.className = "fas fa-check-circle text-armax-orange";
         }
 
         toast.classList.remove("translate-y-20", "opacity-0");
+
         setTimeout(() => {
           toast.classList.add("translate-y-20", "opacity-0");
-        }, 4000);
+        }, 3000);
       }
+      // تغيير دالة saveQuote لتعمل مع قاعدة البيانات
+      async function saveQuoteToDatabase() {
+        const submitBtn = document.querySelector(
+          'button[onclick="saveQuoteToDatabase()"]',
+        );
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin ml-2"></i> جاري الحفظ...';
+        submitBtn.disabled = true;
 
-      // Form Submission
-      document
-        .getElementById("quoteForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const submitBtn = document.getElementById("submitBtn");
-          const originalContent = submitBtn.innerHTML;
-
-          // Loading state
-          submitBtn.disabled = true;
-          submitBtn.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-          submitBtn.classList.add("opacity-75");
-
-          try {
-            // Collect data
-            const formData = {
-              name: document.getElementById("fullName").value,
-              phone: document.getElementById("phone").value,
-              email: document.getElementById("email").value || "غير محدد",
-              company: document.getElementById("company").value,
-              businessType: document.querySelector(
-                'input[name="businessType"]:checked',
-              ).value,
-              products: document.getElementById("products").value,
-              notes: document.getElementById("notes").value || "لا يوجد",
-              date: new Date().toLocaleString("ar-SA"),
-            };
-
-            // Format WhatsApp message
-            const message = `🛒 *طلب عرض سعر جديد - أرماكس*
-
-👤 *الاسم:* ${formData.name}
-📱 *الجوال:* ${formData.phone}
-📧 *البريد:* ${formData.email}
-🏢 *الشركة:* ${formData.company}
-🏪 *النشاط:* ${formData.businessType}
-📅 *التاريخ:* ${formData.date}
-
-📦 *المنتجات المطلوبة:*
-${formData.products}
-
-📝 *ملاحظات:*
-${formData.notes}
-
----
-*تم الإرسال من موقع أرماكس الإلكتروني*`;
-
-            // Open WhatsApp
-            const whatsappUrl = `https://wa.me/966571805775?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, "_blank");
-
-            showToast("تم فتح واتساب لإرسال طلبك بنجاح!");
-            this.reset();
-          } catch (error) {
-            console.error("Error:", error);
-            showToast("حدث خطأ. يرجى المحاولة مرة أخرى.", "error");
-          } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalContent;
-            submitBtn.classList.remove("opacity-75");
-          }
+        // جمع بيانات المنتجات
+        const products = [];
+        document.querySelectorAll(".product-row").forEach((row) => {
+          products.push({
+            name: row.querySelector(".product-name").value,
+            desc: row.querySelector(".product-desc").value,
+            unit: row.querySelector(".product-unit").value,
+            qty: parseFloat(row.querySelector(".product-qty").value) || 0,
+            price: parseFloat(row.querySelector(".product-price").value) || 0,
+          });
         });
 
-      // Phone validation
-      document.getElementById("phone").addEventListener("input", function (e) {
-        this.value = this.value.replace(/[^0-9]/g, "");
-      });
+        // حساب الإجماليات
+        const subtotal = products.reduce((sum, p) => sum + p.qty * p.price, 0);
+        const discountPercent =
+          parseFloat(document.getElementById("discountPercent").value) || 0;
+        const discountAmount = subtotal * (discountPercent / 100);
+        const afterDiscount = subtotal - discountAmount;
+        const taxPercent =
+          parseFloat(document.getElementById("taxPercent").value) || 0;
+        const taxAmount = afterDiscount * (taxPercent / 100);
+        const totalAmount = afterDiscount + taxAmount;
+
+        const quoteData = {
+          quoteNumber: document.getElementById("quoteNumber").value,
+          clientName: document.getElementById("clientName").value,
+          clientPhone: document.getElementById("clientPhone").value,
+          clientEmail: document.getElementById("clientEmail").value,
+          clientAddress: document.getElementById("clientAddress").value,
+          quoteDate: document.getElementById("quoteDate").value,
+          validityDays: parseInt(document.getElementById("validityDays").value),
+          validityDate: calculateValidityDate(),
+          subtotal: subtotal,
+          discountPercent: discountPercent,
+          discountAmount: discountAmount,
+          taxPercent: taxPercent,
+          taxAmount: taxAmount,
+          totalAmount: totalAmount,
+          terms: document.getElementById("terms").value,
+          managerName: document.getElementById("managerName").value,
+          products: products,
+        };
+
+        try {
+          const response = await fetch("http://localhost:3000/api/quotes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(quoteData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showToast(`تم حفظ عرض السعر بنجاح! (رقم: ${result.quoteNumber})`);
+            // حفظ محلي أيضاً كنسخة احتياطية
+            localStorage.setItem("last_saved_quote", JSON.stringify(quoteData));
+          } else {
+            throw new Error(result.error || "فشل في الحفظ");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showToast("خطأ في الاتصال بالخادم، تم الحفظ محلياً فقط", "error");
+          // الحفظ المحلي كنسخة احتياطية
+          saveQuote();
+        } finally {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+
+      // دالة مساعدة لحساب تاريخ الصلاحية
+      function calculateValidityDate() {
+        const date = new Date(document.getElementById("quoteDate").value);
+        const days = parseInt(document.getElementById("validityDays").value);
+        date.setDate(date.getDate() + days);
+        return date.toISOString().split("T")[0];
+      }
+
+      // جلب قائمة عروض الأسعار المحفوظة
+      async function loadQuotesList() {
+        try {
+          const response = await fetch("http://localhost:3000/api/quotes");
+          const result = await response.json();
+
+          if (result.success) {
+            displayQuotesList(result.data);
+          }
+        } catch (error) {
+          console.error("Error loading quotes:", error);
+        }
+      }
+
+      // عرض قائمة العروض في Modal
+      function displayQuotesList(quotes) {
+        const modal = document.createElement("div");
+        modal.className =
+          "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4";
+        modal.innerHTML = `
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[80vh] overflow-hidden shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <h2 class="text-2xl font-bold text-armax-blue">عروض الأسعار المحفوظة</h2>
+                <button onclick="this.closest('.fixed').remove()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto max-h-[60vh] p-6">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3 text-right">رقم العرض</th>
+                            <th class="p-3 text-right">العميل</th>
+                            <th class="p-3 text-right">التاريخ</th>
+                            <th class="p-3 text-right">المبلغ</th>
+                            <th class="p-3 text-right">الحالة</th>
+                            <th class="p-3 text-center">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${quotes
+                          .map(
+                            (q) => `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3 font-bold text-armax-blue">${q.quote_number}</td>
+                                <td class="p-3">${q.client_name}</td>
+                                <td class="p-3 text-gray-600">${new Date(q.quote_date).toLocaleDateString("ar-SA")}</td>
+                                <td class="p-3 font-bold">${q.total_amount} ر.س</td>
+                                <td class="p-3">
+                                    <span class="px-2 py-1 rounded-full text-xs ${getStatusColor(q.status)}">
+                                        ${getStatusText(q.status)}
+                                    </span>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="loadQuoteDetails('${q.quote_number}')" class="text-blue-600 hover:text-blue-800 ml-2">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button onclick="deleteQuote(${q.id})" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `,
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+        document.body.appendChild(modal);
+      }
+
+      // ألوان الحالات
+      function getStatusColor(status) {
+        const colors = {
+          pending: "bg-yellow-100 text-yellow-800",
+          approved: "bg-green-100 text-green-800",
+          rejected: "bg-red-100 text-red-800",
+          expired: "bg-gray-100 text-gray-800",
+        };
+        return colors[status] || colors.pending;
+      }
+
+      function getStatusText(status) {
+        const texts = {
+          pending: "معلق",
+          approved: "معتمد",
+          rejected: "مرفوض",
+          expired: "منتهي",
+        };
+        return texts[status] || status;
+      }
+
+      // تحميل تفاصيل عرض محدد
+      async function loadQuoteDetails(quoteNumber) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/quotes/${quoteNumber}`,
+          );
+          const result = await response.json();
+
+          if (result.success) {
+            fillFormWithQuoteData(result.data);
+            document.querySelector(".fixed").remove(); // إغلاق الـ Modal
+            showToast("تم تحميل بيانات العرض بنجاح");
+          }
+        } catch (error) {
+          showToast("خطأ في تحميل البيانات", "error");
+        }
+      }
+
+      // ملء النموذج بالبيانات المحملة
+      function fillFormWithQuoteData(data) {
+        document.getElementById("quoteNumber").value = data.quote_number;
+        document.getElementById("clientName").value = data.client_name;
+        document.getElementById("clientPhone").value = data.client_phone || "";
+        document.getElementById("clientEmail").value = data.client_email || "";
+        document.getElementById("clientAddress").value =
+          data.client_address || "";
+        document.getElementById("quoteDate").value =
+          data.quote_date.split("T")[0];
+        document.getElementById("validityDays").value = data.validity_days;
+        document.getElementById("discountPercent").value =
+          data.discount_percent;
+        document.getElementById("taxPercent").value = data.tax_percent;
+        document.getElementById("terms").value = data.terms || "";
+        document.getElementById("managerName").value = data.manager_name || "";
+
+        // إضافة المنتجات
+        document.getElementById("productsList").innerHTML = "";
+        data.items.forEach((item) => {
+          addProduct();
+          const lastRow =
+            document.querySelectorAll(".product-row")[
+              document.querySelectorAll(".product-row").length - 1
+            ];
+          lastRow.querySelector(".product-name").value = item.product_name;
+          lastRow.querySelector(".product-desc").value =
+            item.product_desc || "";
+          lastRow.querySelector(".product-unit").value = item.unit;
+          lastRow.querySelector(".product-qty").value = item.quantity;
+          lastRow.querySelector(".product-price").value = item.unit_price;
+        });
+
+        updatePreview();
+      }
+
+      // حذف عرض سعر
+      async function deleteQuote(id) {
+        if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
+
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/quotes/${id}`,
+            {
+              method: "DELETE",
+            },
+          );
+          const result = await response.json();
+
+          if (result.success) {
+            showToast("تم الحذف بنجاح");
+            loadQuotesList(); // تحديث القائمة
+          }
+        } catch (error) {
+          showToast("خطأ في الحذف", "error");
+        }
+      }
     </script>
   </body>
 </html>

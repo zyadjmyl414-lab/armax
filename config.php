@@ -6,21 +6,20 @@ $db_name = 'armax_db';
 $db_user = 'root';
 $db_pass = ''; // ضع كلمة المرور هنا
 
-// إنشاء الجدول إذا لم يكن موجوداً (تشغيل مرة واحدة)
-/*
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(20) UNIQUE,
-    password VARCHAR(255),
-    google_id VARCHAR(50) UNIQUE,
-    avatar VARCHAR(255),
-    status ENUM('active', 'inactive', 'banned') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP NULL,
-    INDEX idx_email (email),
-    INDEX idx_google (google_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-*/
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'armax_test');
+define('DB_USER', 'root');
+define('DB_PASS', ''); // غيره إذا كان لديك باسورد
+
+// إنشاء الاتصال
+try {
+    $db = new PDO(
+        "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=utf8mb4", 
+        DB_USER, 
+        DB_PASS
+    );
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("فشل الاتصال بقاعدة البيانات: " . $e->getMessage());
+}
 ?>
