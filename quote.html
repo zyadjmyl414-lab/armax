@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نظام عروض الأسعار | أرماكس Armax</title>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,16 +14,12 @@
       rel="stylesheet"
     />
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- html2pdf.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <!-- QR Code Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
@@ -70,10 +64,12 @@
         body * {
           visibility: hidden;
         }
+
         #quoteDocument,
         #quoteDocument * {
           visibility: visible;
         }
+
         #quoteDocument {
           position: absolute;
           left: 0;
@@ -90,7 +86,18 @@
       }
 
       .input-field {
-        @apply w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:border-armax-orange focus:ring-2 focus:ring-armax-orange/20 transition-all;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 0.9rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
+      .input-field:focus {
+        border-color: #ff8c42;
+        box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.15);
       }
 
       .product-row {
@@ -101,19 +108,21 @@
         background: rgba(255, 140, 66, 0.05);
       }
 
-      /* Scrollbar styling */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
       }
+
       ::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 4px;
       }
+
       ::-webkit-scrollbar-thumb {
         background: #003b6d;
         border-radius: 4px;
       }
+
       ::-webkit-scrollbar-thumb:hover {
         background: #0056a3;
       }
@@ -128,14 +137,14 @@
         padding: 20px 40px;
         font-size: 24px;
         font-weight: 900;
-        opacity: 0.3;
+        opacity: 0.08;
         pointer-events: none;
         z-index: 0;
       }
     </style>
   </head>
+
   <body class="text-gray-800">
-    <!-- Header -->
     <nav
       class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200"
     >
@@ -152,7 +161,7 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 flex-wrap">
             <button
               onclick="loadTemplate()"
               class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-all"
@@ -160,6 +169,7 @@
               <i class="fas fa-file-import ml-2"></i>
               تحميل قالب
             </button>
+
             <button
               onclick="exportPDF()"
               class="px-6 py-2 rounded-lg gradient-bg text-white font-bold hover:shadow-lg transition-all flex items-center gap-2"
@@ -167,6 +177,7 @@
               <i class="fas fa-file-pdf"></i>
               تصدير PDF
             </button>
+
             <button
               onclick="window.print()"
               class="px-4 py-2 rounded-lg border-2 border-armax-blue text-armax-blue font-bold hover:bg-armax-blue hover:text-white transition-all"
@@ -178,9 +189,8 @@
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="pt-20 min-h-screen flex flex-col lg:flex-row">
-      <!-- Form Section -->
+    <div class="pt-24 min-h-screen flex flex-col lg:flex-row">
+      <!-- Form -->
       <div
         class="w-full lg:w-5/12 bg-white border-l border-gray-200 h-screen overflow-y-auto p-6 shadow-xl z-10"
       >
@@ -201,7 +211,8 @@
             class="space-y-5"
             onsubmit="event.preventDefault()"
           >
-            <!-- رقم العرض والتاريخ -->
+            <input type="hidden" id="editingQuoteId" value="" />
+
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2"
@@ -222,7 +233,6 @@
               </div>
             </div>
 
-            <!-- صلاحية العرض -->
             <div>
               <label class="block text-sm font-bold text-gray-700 mb-2"
                 >سريان العرض (يوم)</label
@@ -238,7 +248,6 @@
               </select>
             </div>
 
-            <!-- بيانات العميل -->
             <div class="border-t border-gray-200 pt-5">
               <h3
                 class="text-lg font-bold text-armax-blue mb-4 flex items-center gap-2"
@@ -246,12 +255,13 @@
                 <i class="fas fa-user-tie text-armax-orange"></i>
                 بيانات العميل
               </h3>
+
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-bold text-gray-700 mb-2"
-                    >اسم الشركة / العميل
-                    <span class="text-red-500">*</span></label
-                  >
+                  <label class="block text-sm font-bold text-gray-700 mb-2">
+                    اسم الشركة / العميل
+                    <span class="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     id="clientName"
@@ -260,6 +270,7 @@
                     oninput="updatePreview()"
                   />
                 </div>
+
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2"
@@ -288,6 +299,7 @@
                     />
                   </div>
                 </div>
+
                 <div>
                   <label class="block text-sm font-bold text-gray-700 mb-2"
                     >العنوان</label
@@ -303,7 +315,6 @@
               </div>
             </div>
 
-            <!-- المنتجات -->
             <div class="border-t border-gray-200 pt-5">
               <div class="flex items-center justify-between mb-4">
                 <h3
@@ -312,6 +323,7 @@
                   <i class="fas fa-boxes text-armax-orange"></i>
                   المنتجات
                 </h3>
+
                 <button
                   type="button"
                   onclick="addProduct()"
@@ -322,12 +334,9 @@
                 </button>
               </div>
 
-              <div id="productsList" class="space-y-3">
-                <!-- المنتجات ستضاف هنا ديناميكياً -->
-              </div>
+              <div id="productsList" class="space-y-3"></div>
             </div>
 
-            <!-- الخصم والضريبة -->
             <div class="border-t border-gray-200 pt-5">
               <h3 class="text-lg font-bold text-armax-blue mb-4">الحسابات</h3>
               <div class="grid grid-cols-2 gap-4">
@@ -362,7 +371,6 @@
               </div>
             </div>
 
-            <!-- الشروط والملاحظات -->
             <div class="border-t border-gray-200 pt-5">
               <h3 class="text-lg font-bold text-armax-blue mb-4">
                 الشروط والملاحظات
@@ -380,7 +388,6 @@
               >
             </div>
 
-            <!-- توقيع المسؤول -->
             <div>
               <label class="block text-sm font-bold text-gray-700 mb-2"
                 >اسم المسؤول</label
@@ -394,17 +401,17 @@
               />
             </div>
 
-            <!-- حفظ في المتصفح -->
-            <!-- أزرار التحكم -->
-            <div class="flex gap-3 pt-4">
+            <div class="flex gap-3 pt-4 flex-wrap">
               <button
                 type="button"
+                id="saveQuoteBtn"
                 onclick="saveQuoteToDatabase()"
-                class="flex-1 py-3 rounded-xl gradient-bg text-white font-bold hover:shadow-lg transition-all"
+                class="flex-1 py-3 rounded-xl gradient-bg text-white font-bold hover:shadow-lg transition-all min-w-[220px]"
               >
                 <i class="fas fa-database ml-2"></i>
                 حفظ في قاعدة البيانات
               </button>
+
               <button
                 type="button"
                 onclick="loadQuotesList()"
@@ -413,6 +420,7 @@
                 <i class="fas fa-list"></i>
                 قائمة العروض
               </button>
+
               <button
                 type="button"
                 onclick="resetForm()"
@@ -425,7 +433,7 @@
         </div>
       </div>
 
-      <!-- Preview Section -->
+      <!-- Preview -->
       <div class="w-full lg:w-7/12 bg-gray-100 p-8 overflow-y-auto">
         <div class="sticky top-0">
           <div class="flex items-center justify-between mb-4">
@@ -440,12 +448,9 @@
             </div>
           </div>
 
-          <!-- A4 Document -->
           <div id="quoteDocument" class="quote-preview p-12 relative">
-            <!-- ختم مائي -->
             <div class="stamp" id="watermark">عرض سعر</div>
 
-            <!-- Header -->
             <div
               class="flex justify-between items-start mb-8 border-b-2 border-armax-blue pb-6"
             >
@@ -464,6 +469,7 @@
                     </p>
                   </div>
                 </div>
+
                 <div class="text-sm text-gray-600 space-y-1">
                   <p>
                     <i class="fas fa-map-marker-alt w-5 text-armax-orange"></i>
@@ -501,7 +507,6 @@
               </div>
             </div>
 
-            <!-- Client Info -->
             <div class="bg-gray-50 rounded-xl p-6 mb-8">
               <h3
                 class="text-armax-blue font-bold mb-3 text-lg border-r-4 border-armax-orange pr-3"
@@ -526,7 +531,6 @@
               </div>
             </div>
 
-            <!-- Products Table -->
             <table class="w-full mb-8">
               <thead>
                 <tr class="bg-armax-blue text-white">
@@ -535,34 +539,29 @@
                   <th class="py-3 px-4 text-center">الوحدة</th>
                   <th class="py-3 px-4 text-center">الكمية</th>
                   <th class="py-3 px-4 text-center">السعر</th>
-                  <th class="py-3 px-4 text-center">الخصم</th>
                   <th class="py-3 px-4 text-left rounded-tl-lg">الإجمالي</th>
                 </tr>
               </thead>
-              <tbody id="previewProducts">
-                <!-- Products will be inserted here -->
-              </tbody>
+              <tbody id="previewProducts"></tbody>
               <tfoot class="bg-gray-50 font-bold">
                 <tr>
-                  <td colspan="6" class="py-3 px-4 text-left">المجموع:</td>
+                  <td colspan="5" class="py-3 px-4 text-left">المجموع:</td>
                   <td class="py-3 px-4 text-left" id="previewSubtotal">
                     0 ر.س
                   </td>
                 </tr>
                 <tr id="previewDiscountRow" class="text-green-600 hidden">
-                  <td colspan="6" class="py-2 px-4 text-left">الخصم:</td>
+                  <td colspan="5" class="py-2 px-4 text-left">الخصم:</td>
                   <td class="py-2 px-4 text-left" id="previewDiscount">
                     0 ر.س
                   </td>
                 </tr>
                 <tr class="text-armax-blue">
-                  <td colspan="6" class="py-2 px-4 text-left">
-                    الضريبة (15%):
-                  </td>
+                  <td colspan="5" class="py-2 px-4 text-left">الضريبة:</td>
                   <td class="py-2 px-4 text-left" id="previewTax">0 ر.س</td>
                 </tr>
                 <tr class="text-xl bg-armax-orange text-white">
-                  <td colspan="6" class="py-4 px-4 text-left rounded-br-lg">
+                  <td colspan="5" class="py-4 px-4 text-left rounded-br-lg">
                     الإجمالي النهائي:
                   </td>
                   <td
@@ -575,7 +574,6 @@
               </tfoot>
             </table>
 
-            <!-- Terms -->
             <div class="mb-12">
               <h3
                 class="text-armax-blue font-bold mb-3 text-lg border-r-4 border-armax-orange pr-3"
@@ -588,7 +586,6 @@
               ></div>
             </div>
 
-            <!-- Signature -->
             <div
               class="flex justify-between items-end mt-12 pt-8 border-t border-gray-200"
             >
@@ -615,7 +612,6 @@
               </div>
             </div>
 
-            <!-- Footer -->
             <div class="absolute bottom-4 left-0 right-0 text-center">
               <p class="text-xs text-gray-400">
                 أرماكس للتجارة - س.ت: 123456789 - www.armax.com
@@ -626,7 +622,6 @@
       </div>
     </div>
 
-    <!-- Notification Toast -->
     <div
       id="toast"
       class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-armax-blue text-white px-6 py-3 rounded-full shadow-2xl z-50 translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3"
@@ -636,31 +631,14 @@
     </div>
 
     <script>
-      // تهيئة النموذج
+      const API_BASE = "http://localhost:5000/api";
       let productCounter = 0;
-      let products = [];
 
       document.addEventListener("DOMContentLoaded", function () {
-        // توليد رقم عرض تلقائي
-        const today = new Date();
-        const quoteNum =
-          "Q-" +
-          today.getFullYear().toString().substr(-2) +
-          String(today.getMonth() + 1).padStart(2, "0") +
-          String(today.getDate()).padStart(2, "0") +
-          "-" +
-          Math.floor(Math.random() * 1000)
-            .toString()
-            .padStart(3, "0");
-
-        document.getElementById("quoteNumber").value = quoteNum;
-        document.getElementById("quoteDate").valueAsDate = today;
-
-        updateValidityDate();
+        setupNewQuote();
         addProduct();
         updatePreview();
 
-        // تحميل QR Code
         new QRCode(document.getElementById("qrcode"), {
           text: "https://wa.me/966500000000",
           width: 64,
@@ -671,50 +649,127 @@
         });
       });
 
-      // إضافة منتج جديد
-      function addProduct() {
+      function setupNewQuote() {
+        const today = new Date();
+        const quoteNum =
+          "Q-" +
+          today.getFullYear().toString().slice(-2) +
+          String(today.getMonth() + 1).padStart(2, "0") +
+          String(today.getDate()).padStart(2, "0") +
+          "-" +
+          Math.floor(Math.random() * 1000)
+            .toString()
+            .padStart(3, "0");
+
+        document.getElementById("editingQuoteId").value = "";
+        document.getElementById("quoteNumber").value = quoteNum;
+        document.getElementById("quoteDate").value = today
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("saveQuoteBtn").innerHTML =
+          '<i class="fas fa-database ml-2"></i> حفظ في قاعدة البيانات';
+        updateValidityDate();
+      }
+
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+        const icon = toast.querySelector("i");
+
+        toastMessage.textContent = message;
+
+        if (type === "error") {
+          toast.classList.remove("bg-armax-blue");
+          toast.classList.add("bg-red-500");
+          icon.className = "fas fa-exclamation-circle text-white";
+        } else {
+          toast.classList.remove("bg-red-500");
+          toast.classList.add("bg-armax-blue");
+          icon.className = "fas fa-check-circle text-armax-orange";
+        }
+
+        toast.classList.remove("translate-y-20", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+
+        setTimeout(() => {
+          toast.classList.add("translate-y-20", "opacity-0");
+          toast.classList.remove("translate-y-0", "opacity-100");
+        }, 3000);
+      }
+
+      function formatCurrency(value) {
+        return `${Number(value || 0).toFixed(2)} ر.س`;
+      }
+
+      function updateValidityDate() {
+        updatePreview();
+      }
+
+      function calculateValidityDate() {
+        const quoteDateValue = document.getElementById("quoteDate").value;
+        const days =
+          parseInt(document.getElementById("validityDays").value, 10) || 14;
+
+        if (!quoteDateValue) return "";
+
+        const date = new Date(quoteDateValue);
+        date.setDate(date.getDate() + days);
+        return date.toISOString().split("T")[0];
+      }
+
+      function addProduct(data = {}) {
         productCounter++;
         const div = document.createElement("div");
         div.className =
           "product-row bg-gray-50 p-4 rounded-xl border border-gray-200 relative";
+
         div.innerHTML = `
-                <button type="button" onclick="removeProduct(this)" class="absolute top-2 left-2 text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center transition-all">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="grid grid-cols-12 gap-3">
-                    <div class="col-span-6">
-                        <label class="block text-xs font-bold text-gray-600 mb-1">اسم الصنف</label>
-                        <input type="text" class="input-field py-2 text-sm product-name" placeholder="مثال: طقم قدور جرانيت" oninput="updatePreview()">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-gray-600 mb-1">الوحدة</label>
-                        <select class="input-field py-2 text-sm product-unit" onchange="updatePreview()">
-                            <option value="قطعة">قطعة</option>
-                            <option value="طقم">طقم</option>
-                            <option value="كرتون">كرتون</option>
-                            <option value="كيلو">كيلو</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-gray-600 mb-1">الكمية</label>
-                        <input type="number" class="input-field py-2 text-sm product-qty" value="1" min="1" oninput="calculateTotals()">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-gray-600 mb-1">السعر</label>
-                        <input type="number" class="input-field py-2 text-sm product-price" placeholder="0.00" min="0" step="0.01" oninput="calculateTotals()">
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <label class="block text-xs font-bold text-gray-600 mb-1">الوصف (اختياري)</label>
-                    <input type="text" class="input-field py-2 text-sm product-desc" placeholder="مواصفات إضافية..." oninput="updatePreview()">
-                </div>
-            `;
+          <button type="button" onclick="removeProduct(this)" class="absolute top-2 left-2 text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center transition-all">
+            <i class="fas fa-times"></i>
+          </button>
+
+          <div class="grid grid-cols-12 gap-3">
+            <div class="col-span-6">
+              <label class="block text-xs font-bold text-gray-600 mb-1">اسم الصنف</label>
+              <input type="text" class="input-field py-2 text-sm product-name" placeholder="مثال: طقم قدور جرانيت" value="${data.name || ""}" oninput="updatePreview()">
+            </div>
+
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-gray-600 mb-1">الوحدة</label>
+              <select class="input-field py-2 text-sm product-unit" onchange="updatePreview()">
+                <option value="قطعة">قطعة</option>
+                <option value="طقم">طقم</option>
+                <option value="كرتون">كرتون</option>
+                <option value="كيلو">كيلو</option>
+              </select>
+            </div>
+
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-gray-600 mb-1">الكمية</label>
+              <input type="number" class="input-field py-2 text-sm product-qty" value="${data.qty || 1}" min="1" oninput="calculateTotals()">
+            </div>
+
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-gray-600 mb-1">السعر</label>
+              <input type="number" class="input-field py-2 text-sm product-price" placeholder="0.00" min="0" step="0.01" value="${data.price || ""}" oninput="calculateTotals()">
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <label class="block text-xs font-bold text-gray-600 mb-1">الوصف (اختياري)</label>
+            <input type="text" class="input-field py-2 text-sm product-desc" placeholder="مواصفات إضافية..." value="${data.desc || ""}" oninput="updatePreview()">
+          </div>
+        `;
 
         document.getElementById("productsList").appendChild(div);
+
+        if (data.unit) {
+          div.querySelector(".product-unit").value = data.unit;
+        }
+
         updatePreview();
       }
 
-      // حذف منتج
       function removeProduct(btn) {
         if (document.querySelectorAll(".product-row").length > 1) {
           btn.closest(".product-row").remove();
@@ -724,7 +779,6 @@
         }
       }
 
-      // حساب الإجماليات
       function calculateTotals() {
         let subtotal = 0;
         const rows = document.querySelectorAll(".product-row");
@@ -746,7 +800,6 @@
         const taxAmount = afterDiscount * (taxPercent / 100);
         const total = afterDiscount + taxAmount;
 
-        // تحديث المعاينة
         document.getElementById("previewSubtotal").textContent =
           formatCurrency(subtotal);
         document.getElementById("previewDiscount").textContent =
@@ -756,7 +809,6 @@
         document.getElementById("previewTotal").textContent =
           formatCurrency(total);
 
-        // إظهار/إخفاء صف الخصم
         const discountRow = document.getElementById("previewDiscountRow");
         if (discountPercent > 0) {
           discountRow.classList.remove("hidden");
@@ -767,7 +819,6 @@
         updateProductsTable();
       }
 
-      // تحديث جدول المنتجات في المعاينة
       function updateProductsTable() {
         const tbody = document.getElementById("previewProducts");
         tbody.innerHTML = "";
@@ -777,8 +828,8 @@
 
         rows.forEach((row) => {
           const name = row.querySelector(".product-name").value || "صنف جديد";
-          const desc = row.querySelector(".product-desc").value;
-          const unit = row.querySelector(".product-unit").value;
+          const desc = row.querySelector(".product-desc").value || "";
+          const unit = row.querySelector(".product-unit").value || "قطعة";
           const qty = parseFloat(row.querySelector(".product-qty").value) || 0;
           const price =
             parseFloat(row.querySelector(".product-price").value) || 0;
@@ -787,29 +838,39 @@
           const tr = document.createElement("tr");
           tr.className = "border-b border-gray-100 hover:bg-gray-50";
           tr.innerHTML = `
-                    <td class="py-3 px-4 text-gray-600">${index}</td>
-                    <td class="py-3 px-4">
-                        <div class="font-bold text-gray-800">${name}</div>
-                        ${desc ? `<div class="text-xs text-gray-500">${desc}</div>` : ""}
-                    </td>
-                    <td class="py-3 px-4 text-center text-gray-600">${unit}</td>
-                    <td class="py-3 px-4 text-center font-bold">${qty}</td>
-                    <td class="py-3 px-4 text-center text-gray-600">${formatCurrency(price)}</td>
-                    <td class="py-3 px-4 text-center">-</td>
-                    <td class="py-3 px-4 text-left font-bold text-armax-blue">${formatCurrency(total)}</td>
-                `;
+            <td class="py-3 px-4 text-gray-600">${index}</td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-gray-800">${name}</div>
+              ${desc ? `<div class="text-xs text-gray-500">${desc}</div>` : ""}
+            </td>
+            <td class="py-3 px-4 text-center text-gray-600">${unit}</td>
+            <td class="py-3 px-4 text-center font-bold">${qty}</td>
+            <td class="py-3 px-4 text-center text-gray-600">${formatCurrency(
+              price,
+            )}</td>
+            <td class="py-3 px-4 text-left font-bold text-armax-blue">${formatCurrency(
+              total,
+            )}</td>
+          `;
           tbody.appendChild(tr);
           index++;
         });
       }
 
-      // تحديث المعاينة العامة
       function updatePreview() {
         document.getElementById("previewQuoteNum").textContent =
           "#" + document.getElementById("quoteNumber").value;
-        document.getElementById("previewDate").textContent = formatDate(
-          document.getElementById("quoteDate").value,
-        );
+
+        const quoteDateValue = document.getElementById("quoteDate").value;
+        const validityDate = calculateValidityDate();
+
+        document.getElementById("previewDate").textContent = quoteDateValue
+          ? new Date(quoteDateValue).toLocaleDateString("ar-SA")
+          : "---";
+
+        document.getElementById("previewValidity").textContent = validityDate
+          ? new Date(validityDate).toLocaleDateString("ar-SA")
+          : "---";
 
         document.getElementById("previewClient").textContent =
           document.getElementById("clientName").value || "---";
@@ -817,226 +878,21 @@
           document.getElementById("clientPhone").value || "---";
         document.getElementById("previewAddress").textContent =
           document.getElementById("clientAddress").value || "---";
-        document.getElementById("previewManager").textContent =
-          document.getElementById("managerName").value;
         document.getElementById("previewTerms").textContent =
-          document.getElementById("terms").value;
+          document.getElementById("terms").value || "---";
+        document.getElementById("previewManager").textContent =
+          document.getElementById("managerName").value || "---";
         document.getElementById("previewTimestamp").textContent =
           new Date().toLocaleString("ar-SA");
 
         calculateTotals();
       }
 
-      // تحديث تاريخ الصلاحية
-      function updateValidityDate() {
-        const date = new Date(document.getElementById("quoteDate").value);
-        const days = parseInt(document.getElementById("validityDays").value);
-        date.setDate(date.getDate() + days);
-        document.getElementById("previewValidity").textContent =
-          formatDate(date);
-        document.getElementById("previewValidity").className =
-          days <= 7 ? "font-bold text-orange-600" : "font-bold text-green-600";
-      }
-
-      // تصدير PDF
-      function exportPDF() {
-        const element = document.getElementById("quoteDocument");
-        const quoteNum = document.getElementById("quoteNumber").value;
-        const clientName =
-          document.getElementById("clientName").value || "عميل";
-
-        const opt = {
-          margin: 0,
-          filename: `عرض-سعر-${quoteNum}-${clientName}.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-          },
-          jsPDF: {
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait",
-            putOnlyUsedFonts: true,
-          },
-        };
-
-        // إظهار رسالة تحميل
-        showToast("جاري إنشاء ملف PDF...");
-
-        html2pdf()
-          .set(opt)
-          .from(element)
-          .save()
-          .then(() => {
-            showToast("تم تحميل ملف PDF بنجاح!");
-          })
-          .catch((err) => {
-            console.error(err);
-            showToast("حدث خطأ في التصدير", "error");
-          });
-      }
-
-      // حفظ المسودة
-      function saveQuote() {
-        const data = {
-          quoteNumber: document.getElementById("quoteNumber").value,
-          date: document.getElementById("quoteDate").value,
-          client: {
-            name: document.getElementById("clientName").value,
-            phone: document.getElementById("clientPhone").value,
-            email: document.getElementById("clientEmail").value,
-            address: document.getElementById("clientAddress").value,
-          },
-          products: [],
-          discount: document.getElementById("discountPercent").value,
-          tax: document.getElementById("taxPercent").value,
-          terms: document.getElementById("terms").value,
-          manager: document.getElementById("managerName").value,
-        };
-
-        // جمع المنتجات
-        document.querySelectorAll(".product-row").forEach((row) => {
-          data.products.push({
-            name: row.querySelector(".product-name").value,
-            desc: row.querySelector(".product-desc").value,
-            unit: row.querySelector(".product-unit").value,
-            qty: row.querySelector(".product-qty").value,
-            price: row.querySelector(".product-price").value,
-          });
-        });
-
-        localStorage.setItem(
-          "armax_quote_" + data.quoteNumber,
-          JSON.stringify(data),
-        );
-        showToast(
-          "تم حفظ المسودة بنجاح! (رقم العرض: " + data.quoteNumber + ")",
-        );
-      }
-
-      // تحميل قالب
-      function loadTemplate() {
-        const saved = Object.keys(localStorage).filter((k) =>
-          k.startsWith("armax_quote_"),
-        );
-        if (saved.length > 0) {
-          const lastQuote = saved[saved.length - 1];
-          const data = JSON.parse(localStorage.getItem(lastQuote));
-
-          if (
-            confirm("هل تريد تحميل آخر عرض محفوظ (" + data.quoteNumber + ")؟")
-          ) {
-            // استعادة البيانات
-            document.getElementById("clientName").value =
-              data.client.name || "";
-            document.getElementById("clientPhone").value =
-              data.client.phone || "";
-            document.getElementById("clientEmail").value =
-              data.client.email || "";
-            document.getElementById("clientAddress").value =
-              data.client.address || "";
-            document.getElementById("discountPercent").value =
-              data.discount || 0;
-            document.getElementById("taxPercent").value = data.tax || 15;
-            document.getElementById("terms").value = data.terms || "";
-            document.getElementById("managerName").value = data.manager || "";
-
-            // استعادة المنتجات
-            document.getElementById("productsList").innerHTML = "";
-            data.products.forEach((prod) => {
-              addProduct();
-              const lastRow =
-                document.querySelectorAll(".product-row")[
-                  document.querySelectorAll(".product-row").length - 1
-                ];
-              lastRow.querySelector(".product-name").value = prod.name;
-              lastRow.querySelector(".product-desc").value = prod.desc || "";
-              lastRow.querySelector(".product-unit").value = prod.unit;
-              lastRow.querySelector(".product-qty").value = prod.qty;
-              lastRow.querySelector(".product-price").value = prod.price;
-            });
-
-            updatePreview();
-            showToast("تم تحميل البيانات بنجاح");
-          }
-        } else {
-          showToast("لا توجد مسودات محفوظة", "error");
-        }
-      }
-
-      // إعادة تعيين النموذج
-      function resetForm() {
-        if (confirm("هل أنت متأكد من حذف جميع البيانات؟")) {
-          document.getElementById("quoteForm").reset();
-          document.getElementById("productsList").innerHTML = "";
-          productCounter = 0;
-
-          // إعادة تهيئة
-          const today = new Date();
-          document.getElementById("quoteDate").valueAsDate = today;
-          addProduct();
-          updatePreview();
-          showToast("تم إعادة تعيين النموذج");
-        }
-      }
-
-      // مساعدات
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat("ar-SA", {
-          style: "currency",
-          currency: "SAR",
-          minimumFractionDigits: 2,
-        }).format(amount);
-      }
-
-      function formatDate(dateInput) {
-        if (!dateInput) return "";
-        const date = new Date(dateInput);
-        return date.toLocaleDateString("ar-SA", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
-      }
-
-      function showToast(message, type = "success") {
-        const toast = document.getElementById("toast");
-        const toastMessage = document.getElementById("toastMessage");
-        const icon = toast.querySelector("i");
-
-        toastMessage.textContent = message;
-
-        if (type === "error") {
-          toast.classList.remove("bg-armax-blue");
-          toast.classList.add("bg-red-500");
-          icon.className = "fas fa-exclamation-circle";
-        } else {
-          toast.classList.remove("bg-red-500");
-          toast.classList.add("bg-armax-blue");
-          icon.className = "fas fa-check-circle text-armax-orange";
-        }
-
-        toast.classList.remove("translate-y-20", "opacity-0");
-
-        setTimeout(() => {
-          toast.classList.add("translate-y-20", "opacity-0");
-        }, 3000);
-      }
-      // تغيير دالة saveQuote لتعمل مع قاعدة البيانات
-      async function saveQuoteToDatabase() {
-        const submitBtn = document.querySelector(
-          'button[onclick="saveQuoteToDatabase()"]',
-        );
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin ml-2"></i> جاري الحفظ...';
-        submitBtn.disabled = true;
-
-        // جمع بيانات المنتجات
+      function collectQuoteData() {
+        const rows = document.querySelectorAll(".product-row");
         const products = [];
-        document.querySelectorAll(".product-row").forEach((row) => {
+
+        rows.forEach((row) => {
           products.push({
             name: row.querySelector(".product-name").value,
             desc: row.querySelector(".product-desc").value,
@@ -1046,7 +902,6 @@
           });
         });
 
-        // حساب الإجماليات
         const subtotal = products.reduce((sum, p) => sum + p.qty * p.price, 0);
         const discountPercent =
           parseFloat(document.getElementById("discountPercent").value) || 0;
@@ -1057,138 +912,218 @@
         const taxAmount = afterDiscount * (taxPercent / 100);
         const totalAmount = afterDiscount + taxAmount;
 
-        const quoteData = {
+        return {
           quoteNumber: document.getElementById("quoteNumber").value,
           clientName: document.getElementById("clientName").value,
           clientPhone: document.getElementById("clientPhone").value,
           clientEmail: document.getElementById("clientEmail").value,
           clientAddress: document.getElementById("clientAddress").value,
           quoteDate: document.getElementById("quoteDate").value,
-          validityDays: parseInt(document.getElementById("validityDays").value),
+          validityDays: parseInt(
+            document.getElementById("validityDays").value,
+            10,
+          ),
           validityDate: calculateValidityDate(),
-          subtotal: subtotal,
-          discountPercent: discountPercent,
-          discountAmount: discountAmount,
-          taxPercent: taxPercent,
-          taxAmount: taxAmount,
-          totalAmount: totalAmount,
+          subtotal,
+          discountPercent,
+          discountAmount,
+          taxPercent,
+          taxAmount,
+          totalAmount,
           terms: document.getElementById("terms").value,
           managerName: document.getElementById("managerName").value,
-          products: products,
+          products,
         };
+      }
+
+      async function saveQuoteToDatabase() {
+        const submitBtn = document.getElementById("saveQuoteBtn");
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin ml-2"></i> جاري الحفظ...';
+        submitBtn.disabled = true;
 
         try {
-          const response = await fetch("http://localhost:3000/api/quotes", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
+          const quoteData = collectQuoteData();
+
+          if (!quoteData.quoteNumber || !quoteData.clientName) {
+            showToast("رقم العرض واسم العميل مطلوبان", "error");
+            return;
+          }
+
+          const editingId = document.getElementById("editingQuoteId").value;
+          const isEditing = !!editingId;
+
+          const response = await fetch(
+            isEditing
+              ? `${API_BASE}/quotes/${editingId}`
+              : `${API_BASE}/quotes`,
+            {
+              method: isEditing ? "PUT" : "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify(quoteData),
             },
-            body: JSON.stringify(quoteData),
-          });
+          );
 
           const result = await response.json();
 
           if (result.success) {
-            showToast(`تم حفظ عرض السعر بنجاح! (رقم: ${result.quoteNumber})`);
-            // حفظ محلي أيضاً كنسخة احتياطية
+            showToast(
+              isEditing
+                ? "تم تحديث عرض السعر بنجاح"
+                : `تم حفظ عرض السعر بنجاح! (رقم: ${result.quoteNumber})`,
+            );
+
             localStorage.setItem("last_saved_quote", JSON.stringify(quoteData));
+
+            if (!isEditing) {
+              setupNewQuote();
+              document.getElementById("productsList").innerHTML = "";
+              addProduct();
+              updatePreview();
+            }
           } else {
             throw new Error(result.error || "فشل في الحفظ");
           }
         } catch (error) {
           console.error("Error:", error);
           showToast("خطأ في الاتصال بالخادم، تم الحفظ محلياً فقط", "error");
-          // الحفظ المحلي كنسخة احتياطية
-          saveQuote();
+          saveQuoteLocally();
         } finally {
           submitBtn.innerHTML = originalText;
           submitBtn.disabled = false;
         }
       }
 
-      // دالة مساعدة لحساب تاريخ الصلاحية
-      function calculateValidityDate() {
-        const date = new Date(document.getElementById("quoteDate").value);
-        const days = parseInt(document.getElementById("validityDays").value);
-        date.setDate(date.getDate() + days);
-        return date.toISOString().split("T")[0];
+      function saveQuoteLocally() {
+        const quoteData = collectQuoteData();
+        localStorage.setItem("last_saved_quote", JSON.stringify(quoteData));
       }
 
-      // جلب قائمة عروض الأسعار المحفوظة
-      async function loadQuotesList() {
-        try {
-          const response = await fetch("http://localhost:3000/api/quotes");
-          const result = await response.json();
+      function loadTemplate() {
+        const saved = localStorage.getItem("last_saved_quote");
+        if (!saved) {
+          showToast("لا يوجد قالب محفوظ", "error");
+          return;
+        }
 
-          if (result.success) {
-            displayQuotesList(result.data);
-          }
+        try {
+          const data = JSON.parse(saved);
+          fillFormWithQuoteData(data, true);
+          showToast("تم تحميل القالب بنجاح");
         } catch (error) {
-          console.error("Error loading quotes:", error);
+          showToast("فشل تحميل القالب", "error");
         }
       }
 
-      // عرض قائمة العروض في Modal
-      function displayQuotesList(quotes) {
-        const modal = document.createElement("div");
-        modal.className =
-          "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4";
-        modal.innerHTML = `
-        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[80vh] overflow-hidden shadow-2xl">
-            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-                <h2 class="text-2xl font-bold text-armax-blue">عروض الأسعار المحفوظة</h2>
-                <button onclick="this.closest('.fixed').remove()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="overflow-y-auto max-h-[60vh] p-6">
-                <table class="w-full">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="p-3 text-right">رقم العرض</th>
-                            <th class="p-3 text-right">العميل</th>
-                            <th class="p-3 text-right">التاريخ</th>
-                            <th class="p-3 text-right">المبلغ</th>
-                            <th class="p-3 text-right">الحالة</th>
-                            <th class="p-3 text-center">إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${quotes
-                          .map(
-                            (q) => `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3 font-bold text-armax-blue">${q.quote_number}</td>
-                                <td class="p-3">${q.client_name}</td>
-                                <td class="p-3 text-gray-600">${new Date(q.quote_date).toLocaleDateString("ar-SA")}</td>
-                                <td class="p-3 font-bold">${q.total_amount} ر.س</td>
-                                <td class="p-3">
-                                    <span class="px-2 py-1 rounded-full text-xs ${getStatusColor(q.status)}">
-                                        ${getStatusText(q.status)}
-                                    </span>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <button onclick="loadQuoteDetails('${q.quote_number}')" class="text-blue-600 hover:text-blue-800 ml-2">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="deleteQuote(${q.id})" class="text-red-600 hover:text-red-800">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `,
-                          )
-                          .join("")}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
-        document.body.appendChild(modal);
+      function fillFormWithQuoteData(data, isLocal = false) {
+        document.getElementById("quoteNumber").value =
+          data.quoteNumber || data.quote_number || "";
+        document.getElementById("clientName").value =
+          data.clientName || data.client_name || "";
+        document.getElementById("clientPhone").value =
+          data.clientPhone || data.client_phone || "";
+        document.getElementById("clientEmail").value =
+          data.clientEmail || data.client_email || "";
+        document.getElementById("clientAddress").value =
+          data.clientAddress || data.client_address || "";
+        document.getElementById("quoteDate").value = (
+          data.quoteDate ||
+          data.quote_date ||
+          ""
+        )
+          .toString()
+          .split("T")[0];
+        document.getElementById("validityDays").value =
+          data.validityDays || data.validity_days || 14;
+        document.getElementById("discountPercent").value =
+          data.discountPercent || data.discount_percent || 0;
+        document.getElementById("taxPercent").value =
+          data.taxPercent || data.tax_percent || 15;
+        document.getElementById("terms").value = data.terms || "";
+        document.getElementById("managerName").value =
+          data.managerName || data.manager_name || "";
+
+        document.getElementById("productsList").innerHTML = "";
+        const items = data.products || data.items || [];
+
+        if (items.length) {
+          items.forEach((item) => {
+            addProduct({
+              name: item.name || item.product_name || "",
+              desc: item.desc || item.product_desc || "",
+              unit: item.unit || "قطعة",
+              qty: item.qty || item.quantity || 1,
+              price: item.price || item.unit_price || 0,
+            });
+          });
+        } else {
+          addProduct();
+        }
+
+        if (!isLocal && data.id) {
+          document.getElementById("editingQuoteId").value = data.id;
+          document.getElementById("saveQuoteBtn").innerHTML =
+            '<i class="fas fa-pen ml-2"></i> تحديث عرض السعر';
+        } else {
+          document.getElementById("editingQuoteId").value = "";
+        }
+
+        updatePreview();
       }
 
-      // ألوان الحالات
+      function resetForm() {
+        if (!confirm("هل تريد فعلاً إعادة تعيين النموذج؟")) return;
+
+        document.getElementById("quoteForm").reset();
+        document.getElementById("productsList").innerHTML = "";
+        setupNewQuote();
+        document.getElementById("terms").value = `• الأسعار تشمل الضريبة المضافة
+• العرض ساري لمدة 14 يوم من تاريخ الإصدار
+• التوصيل مجاني للطلبات فوق 5000 ريال
+• الدفع عند الاستلام أو تحويل بنكي`;
+        document.getElementById("managerName").value = "خالد حمود علي";
+        document.getElementById("discountPercent").value = 0;
+        document.getElementById("taxPercent").value = 15;
+        addProduct();
+        updatePreview();
+      }
+
+      function exportPDF() {
+        const element = document.getElementById("quoteDocument");
+        const filename =
+          (document.getElementById("quoteNumber").value || "quote") + ".pdf";
+
+        const opt = {
+          margin: 0,
+          filename,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+
+        html2pdf().set(opt).from(element).save();
+      }
+
+      async function loadQuotesList() {
+        try {
+          const response = await fetch(`${API_BASE}/quotes`);
+          const result = await response.json();
+
+          if (result.success) {
+            displayQuotesList(result.data || []);
+          } else {
+            showToast(result.error || "فشل تحميل العروض", "error");
+          }
+        } catch (error) {
+          console.error("Error loading quotes:", error);
+          showToast("خطأ في تحميل قائمة العروض", "error");
+        }
+      }
+
       function getStatusColor(status) {
         const colors = {
           pending: "bg-yellow-100 text-yellow-800",
@@ -1206,81 +1141,136 @@
           rejected: "مرفوض",
           expired: "منتهي",
         };
-        return texts[status] || status;
+        return texts[status] || status || "معلق";
       }
 
-      // تحميل تفاصيل عرض محدد
+      function displayQuotesList(quotes) {
+        const modal = document.createElement("div");
+        modal.className =
+          "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4";
+        modal.innerHTML = `
+          <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[80vh] overflow-hidden shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+              <h2 class="text-2xl font-bold text-armax-blue">عروض الأسعار المحفوظة</h2>
+              <button onclick="this.closest('.fixed').remove()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div class="overflow-y-auto max-h-[60vh] p-6">
+              ${
+                !quotes.length
+                  ? `<div class="text-center text-gray-500 py-10">لا توجد عروض محفوظة</div>`
+                  : `
+                    <table class="w-full">
+                      <thead class="bg-gray-100">
+                        <tr>
+                          <th class="p-3 text-right">رقم العرض</th>
+                          <th class="p-3 text-right">العميل</th>
+                          <th class="p-3 text-right">التاريخ</th>
+                          <th class="p-3 text-right">المبلغ</th>
+                          <th class="p-3 text-right">الحالة</th>
+                          <th class="p-3 text-center">إجراءات</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${quotes
+                          .map(
+                            (quote) => `
+                              <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3 font-bold text-armax-blue">${
+                                  quote.quote_number || "-"
+                                }</td>
+                                <td class="p-3">${quote.client_name || "-"}</td>
+                                <td class="p-3">${
+                                  quote.quote_date
+                                    ? new Date(
+                                        quote.quote_date,
+                                      ).toLocaleDateString("ar-SA")
+                                    : "-"
+                                }</td>
+                                <td class="p-3">${formatCurrency(
+                                  quote.total_amount || 0,
+                                )}</td>
+                                <td class="p-3">
+                                  <span class="px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(
+                                    quote.status,
+                                  )}">
+                                    ${getStatusText(quote.status)}
+                                  </span>
+                                </td>
+                                <td class="p-3">
+                                  <div class="flex items-center justify-center gap-2">
+                                    <button onclick="loadQuoteDetails('${
+                                      quote.quote_number
+                                    }')" class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center">
+                                      <i class="fas fa-upload"></i>
+                                    </button>
+                                    <button onclick="deleteQuote(${
+                                      quote.id
+                                    })" class="w-9 h-9 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center">
+                                      <i class="fas fa-trash"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            `,
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+                  `
+              }
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+      }
+
       async function loadQuoteDetails(quoteNumber) {
         try {
-          const response = await fetch(
-            `http://localhost:3000/api/quotes/${quoteNumber}`,
-          );
+          const response = await fetch(`${API_BASE}/quotes/${quoteNumber}`);
           const result = await response.json();
 
           if (result.success) {
             fillFormWithQuoteData(result.data);
-            document.querySelector(".fixed").remove(); // إغلاق الـ Modal
+            const openedModal = document.querySelector(
+              ".fixed.inset-0.bg-black\\/50",
+            );
+            if (openedModal) openedModal.remove();
             showToast("تم تحميل بيانات العرض بنجاح");
+          } else {
+            showToast(result.error || "تعذر تحميل بيانات العرض", "error");
           }
         } catch (error) {
+          console.error(error);
           showToast("خطأ في تحميل البيانات", "error");
         }
       }
 
-      // ملء النموذج بالبيانات المحملة
-      function fillFormWithQuoteData(data) {
-        document.getElementById("quoteNumber").value = data.quote_number;
-        document.getElementById("clientName").value = data.client_name;
-        document.getElementById("clientPhone").value = data.client_phone || "";
-        document.getElementById("clientEmail").value = data.client_email || "";
-        document.getElementById("clientAddress").value =
-          data.client_address || "";
-        document.getElementById("quoteDate").value =
-          data.quote_date.split("T")[0];
-        document.getElementById("validityDays").value = data.validity_days;
-        document.getElementById("discountPercent").value =
-          data.discount_percent;
-        document.getElementById("taxPercent").value = data.tax_percent;
-        document.getElementById("terms").value = data.terms || "";
-        document.getElementById("managerName").value = data.manager_name || "";
-
-        // إضافة المنتجات
-        document.getElementById("productsList").innerHTML = "";
-        data.items.forEach((item) => {
-          addProduct();
-          const lastRow =
-            document.querySelectorAll(".product-row")[
-              document.querySelectorAll(".product-row").length - 1
-            ];
-          lastRow.querySelector(".product-name").value = item.product_name;
-          lastRow.querySelector(".product-desc").value =
-            item.product_desc || "";
-          lastRow.querySelector(".product-unit").value = item.unit;
-          lastRow.querySelector(".product-qty").value = item.quantity;
-          lastRow.querySelector(".product-price").value = item.unit_price;
-        });
-
-        updatePreview();
-      }
-
-      // حذف عرض سعر
       async function deleteQuote(id) {
         if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
 
         try {
-          const response = await fetch(
-            `http://localhost:3000/api/quotes/${id}`,
-            {
-              method: "DELETE",
-            },
-          );
+          const response = await fetch(`${API_BASE}/quotes/${id}`, {
+            method: "DELETE",
+          });
+
           const result = await response.json();
 
           if (result.success) {
             showToast("تم الحذف بنجاح");
-            loadQuotesList(); // تحديث القائمة
+            const openedModal = document.querySelector(
+              ".fixed.inset-0.bg-black\\/50",
+            );
+            if (openedModal) openedModal.remove();
+            loadQuotesList();
+          } else {
+            showToast(result.error || "فشل الحذف", "error");
           }
         } catch (error) {
+          console.error(error);
           showToast("خطأ في الحذف", "error");
         }
       }

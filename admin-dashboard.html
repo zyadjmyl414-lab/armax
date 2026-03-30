@@ -14,6 +14,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -36,21 +37,26 @@
         },
       };
     </script>
+
     <style>
       body {
         font-family: "Tajawal", sans-serif;
       }
+
       .sidebar {
         transition: transform 0.3s ease;
       }
+
       .nav-item {
         transition: all 0.3s;
       }
+
       .nav-item:hover,
       .nav-item.active {
         background: rgba(255, 140, 66, 0.1);
         border-right: 3px solid #ff8c42;
       }
+
       .stat-card {
         background: linear-gradient(
           135deg,
@@ -59,6 +65,7 @@
         );
         backdrop-filter: blur(10px);
       }
+
       .dark .stat-card {
         background: linear-gradient(
           135deg,
@@ -66,9 +73,11 @@
           rgba(11, 17, 32, 0.9) 100%
         );
       }
+
       .fade-in {
         animation: fadeIn 0.3s ease-in;
       }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -81,6 +90,7 @@
       }
     </style>
   </head>
+
   <body
     class="bg-gray-100 dark:bg-armax-darker text-gray-800 dark:text-gray-100"
   >
@@ -105,7 +115,6 @@
       >
         <div class="p-6 border-b dark:border-gray-700">
           <div class="flex items-center gap-3">
-            <!-- استخدام background-image بدلاً من img -->
             <div
               class="w-12 h-12 rounded-full border-2 border-white shadow-lg bg-armax-blue bg-cover bg-center flex-shrink-0"
               style="background-image: url(&quot;logo.jpeg&quot;)"
@@ -180,6 +189,20 @@
             <span class="font-bold">الطلبات</span>
           </button>
 
+          <button
+            onclick="showSection('quotes')"
+            id="nav-quotes"
+            class="nav-item w-full text-right px-4 py-3 rounded-xl flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <i class="fas fa-file-invoice-dollar w-6 text-indigo-500"></i>
+            <span class="font-bold">عروض الأسعار</span>
+            <span
+              id="quoteCount"
+              class="mr-auto bg-indigo-500 text-white text-xs px-2 py-1 rounded-full"
+              >0</span
+            >
+          </button>
+
           <div class="border-t dark:border-gray-700 my-4 pt-4">
             <button
               onclick="toggleDarkMode()"
@@ -213,7 +236,7 @@
         </div>
       </aside>
 
-      <!-- Overlay for mobile -->
+      <!-- Overlay -->
       <div
         id="overlay"
         onclick="toggleSidebar()"
@@ -222,7 +245,7 @@
 
       <!-- Main Content -->
       <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
-        <!-- Dashboard Section -->
+        <!-- Dashboard -->
         <section id="section-dashboard" class="fade-in">
           <div class="flex justify-between items-center mb-8">
             <div>
@@ -245,7 +268,6 @@
             </a>
           </div>
 
-          <!-- Stats Grid -->
           <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div
               class="stat-card bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
@@ -292,10 +314,10 @@
                 class="text-3xl font-black text-gray-800 dark:text-white mb-1"
                 id="statOrders"
               >
-                24
+                0
               </div>
               <div class="text-gray-500 dark:text-gray-400 text-sm">
-                طلب جديد
+                الطلبات
               </div>
             </div>
 
@@ -338,16 +360,16 @@
               </div>
               <div
                 class="text-3xl font-black text-gray-800 dark:text-white mb-1"
+                id="statSales"
               >
-                12,450
+                0
               </div>
               <div class="text-gray-500 dark:text-gray-400 text-sm">
-                إجمالي المبيعات (ر.س)
+                إجمالي العروض (ر.س)
               </div>
             </div>
           </div>
 
-          <!-- Charts -->
           <div class="grid lg:grid-cols-2 gap-8 mb-8">
             <div
               class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
@@ -367,7 +389,6 @@
             </div>
           </div>
 
-          <!-- Recent Activity -->
           <div
             class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
           >
@@ -381,13 +402,11 @@
                 عرض الكل
               </button>
             </div>
-            <div class="p-6 space-y-4" id="activityList">
-              <!-- Activity items will be inserted here -->
-            </div>
+            <div class="p-6 space-y-4" id="activityList"></div>
           </div>
         </section>
 
-        <!-- Products Section -->
+        <!-- Products -->
         <section id="section-products" class="hidden fade-in">
           <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-black text-gray-800 dark:text-white">
@@ -402,7 +421,6 @@
             </button>
           </div>
 
-          <!-- Filters -->
           <div
             class="bg-white dark:bg-armax-dark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6 flex flex-wrap gap-4"
           >
@@ -414,7 +432,7 @@
               oninput="filterProducts()"
             />
             <select
-              id="productCategory"
+              id="productCategoryFilter"
               class="px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
               onchange="filterProducts()"
             >
@@ -426,7 +444,6 @@
             </select>
           </div>
 
-          <!-- Products Table -->
           <div
             class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
           >
@@ -464,15 +481,13 @@
                 <tbody
                   id="productsTableBody"
                   class="divide-y dark:divide-gray-700"
-                >
-                  <!-- Products will be inserted here -->
-                </tbody>
+                ></tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- Offers Section -->
+        <!-- Offers -->
         <section id="section-offers" class="hidden fade-in">
           <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-black text-gray-800 dark:text-white">
@@ -487,12 +502,13 @@
             </button>
           </div>
 
-          <div id="offersGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Offers will be inserted here -->
-          </div>
+          <div
+            id="offersGrid"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          ></div>
         </section>
 
-        <!-- Users Section -->
+        <!-- Users -->
         <section id="section-users" class="hidden fade-in">
           <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-black text-gray-800 dark:text-white">
@@ -544,15 +560,13 @@
                 <tbody
                   id="usersTableBody"
                   class="divide-y dark:divide-gray-700"
-                >
-                  <!-- Users will be inserted here -->
-                </tbody>
+                ></tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- Orders Section -->
+        <!-- Orders -->
         <section id="section-orders" class="hidden fade-in">
           <h1 class="text-3xl font-black text-gray-800 dark:text-white mb-8">
             الطلبات الواردة
@@ -566,6 +580,121 @@
             <p class="text-gray-500 dark:text-gray-400">
               الطلبات تظهر هنا عندما يرسلها العملاء عبر واتساب
             </p>
+          </div>
+        </section>
+
+        <!-- Quotes -->
+        <section id="section-quotes" class="hidden fade-in">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h1 class="text-3xl font-black text-gray-800 dark:text-white">
+                عروض الأسعار
+              </h1>
+              <p class="text-gray-600 dark:text-gray-400 mt-2">
+                إدارة عروض الأسعار المحفوظة في قاعدة البيانات
+              </p>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                onclick="loadQuotes()"
+                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <i class="fas fa-rotate-left ml-2"></i>
+                تحديث
+              </button>
+
+              <a
+                href="quote.html"
+                target="_blank"
+                class="px-5 py-3 rounded-xl bg-indigo-500 text-white font-bold hover:bg-indigo-600 transition-colors flex items-center gap-2"
+              >
+                <i class="fas fa-plus"></i>
+                إنشاء عرض جديد
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="bg-white dark:bg-armax-dark p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6 flex flex-wrap gap-4"
+          >
+            <input
+              type="text"
+              id="quoteSearch"
+              placeholder="بحث برقم العرض أو اسم العميل أو الجوال..."
+              class="flex-1 min-w-[200px] px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              oninput="filterQuotes()"
+            />
+
+            <select
+              id="quoteStatusFilter"
+              class="px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
+              onchange="filterQuotes()"
+            >
+              <option value="all">كل الحالات</option>
+              <option value="pending">معلق</option>
+              <option value="approved">معتمد</option>
+              <option value="rejected">مرفوض</option>
+              <option value="expired">منتهي</option>
+            </select>
+          </div>
+
+          <div
+            class="bg-white dark:bg-armax-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      رقم العرض
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      العميل
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      التاريخ
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الإجمالي
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الحالة
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      العناصر
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm font-bold text-gray-600 dark:text-gray-300"
+                    >
+                      الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="quotesTableBody"
+                  class="divide-y dark:divide-gray-700"
+                >
+                  <tr>
+                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                      لا توجد بيانات بعد
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       </main>
@@ -592,8 +721,10 @@
             <i class="fas fa-times text-xl"></i>
           </button>
         </div>
+
         <form id="productForm" class="p-6 space-y-4">
           <input type="hidden" id="productId" />
+
           <div>
             <label
               class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
@@ -606,6 +737,7 @@
               class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
             />
           </div>
+
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -631,6 +763,7 @@
               />
             </div>
           </div>
+
           <div>
             <label
               class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
@@ -647,6 +780,7 @@
               <option value="electronics">أجهزة صغيرة</option>
             </select>
           </div>
+
           <div>
             <label
               class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
@@ -659,6 +793,7 @@
               class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
             />
           </div>
+
           <div>
             <label
               class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"
@@ -670,6 +805,7 @@
               class="w-full px-4 py-2 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:border-armax-orange"
             ></textarea>
           </div>
+
           <div class="flex gap-3 pt-4">
             <button
               type="button"
@@ -690,77 +826,48 @@
     </div>
 
     <script>
-      // التحقق من تسجيل الدخول - يجب أن يكون أول كود يعمل
+      const API_URL = "http://localhost:5000/api";
+      const authToken = localStorage.getItem("adminToken");
+
       (function () {
         const isLoggedIn = localStorage.getItem("adminLoggedIn");
-        console.log("حالة تسجيل الدخول:", isLoggedIn); // للتأكد
-        const API_URL = "http://localhost:5000/api";
+        console.log("حالة تسجيل الدخول:", isLoggedIn);
 
-        // التحقق من التوكن
-        const token = localStorage.getItem("adminToken");
-        if (!token) {
-          window.location.href = "admin-login.html";
-        }
-
-        // دالة للطلبات الم Authenticated
-        async function apiRequest(endpoint, options = {}) {
-          try {
-            const response = await fetch(`${API_URL}${endpoint}`, {
-              ...options,
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${authToken}`,
-                ...options.headers,
-              },
-            });
-
-            if (response.status === 401) {
-              localStorage.removeItem("adminToken");
-              window.location.href = "admin-login.html";
-              return;
-            }
-            return await response.json();
-          } catch (error) {
-            console.error("API Error:", error);
-            showToast("خطأ في الاتصال بالخادم");
-            return { success: false, error: error.message };
-          }
-        }
-
-        if (isLoggedIn !== "true") {
+        if (!authToken || isLoggedIn !== "true") {
           window.location.replace("admin-login.html");
-          return; // إيقاف باقي الكود
+          return;
         }
       })();
-      // Security Check
-      if (localStorage.getItem("adminLoggedIn") !== "true") {
-        window.location.href = "admin-login.html";
+
+      async function apiRequest(endpoint, options = {}) {
+        try {
+          const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+              ...(options.headers || {}),
+            },
+          });
+
+          if (response.status === 401) {
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("adminLoggedIn");
+            localStorage.removeItem("adminUser");
+            window.location.href = "admin-login.html";
+            return { success: false, message: "Unauthorized" };
+          }
+
+          return await response.json();
+        } catch (error) {
+          console.error("API Error:", error);
+          showToast("خطأ في الاتصال بالخادم");
+          return { success: false, error: error.message };
+        }
       }
 
-      // Initialize Data
-      let products = JSON.parse(localStorage.getItem("armax_products")) || [
-        {
-          id: 1,
-          name: "طقم قدور جرانيت 12 قطعة",
-          category: "cookware",
-          price: 850,
-          oldPrice: 1200,
-          image:
-            "https://images.unsplash.com/photo-1584990347449-a2d4c2c044c5?w=400",
-          desc: "طقم كامل بمقابض باكلايت",
-        },
-        {
-          id: 2,
-          name: "طقم حافظات طعام 24 قطعة",
-          category: "storage",
-          price: 220,
-          oldPrice: 350,
-          image:
-            "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400",
-          desc: "بلاستيك آمن للطعام",
-        },
-      ];
-
+      // Local placeholders + remote data
+      let products = [];
       let users = JSON.parse(localStorage.getItem("armax_users")) || [
         {
           id: 1,
@@ -795,81 +902,7 @@
         },
       ];
 
-      // Save initial data if empty
-      if (!localStorage.getItem("armax_products")) {
-        localStorage.setItem("armax_products", JSON.stringify(products));
-      }
-
-      // Navigation
-      function showSection(sectionName) {
-        // Hide all sections
-        document.querySelectorAll("section").forEach((section) => {
-          section.classList.add("hidden");
-        });
-
-        // Show selected section
-        document
-          .getElementById(`section-${sectionName}`)
-          .classList.remove("hidden");
-
-        // Update nav active state
-        document.querySelectorAll(".nav-item").forEach((item) => {
-          item.classList.remove(
-            "active",
-            "bg-orange-50",
-            "dark:bg-orange-900/20",
-          );
-        });
-        document.getElementById(`nav-${sectionName}`).classList.add("active");
-
-        // Close sidebar on mobile
-        if (window.innerWidth < 1024) {
-          toggleSidebar();
-        }
-
-        // Load section data
-        if (sectionName === "products") renderProducts();
-        if (sectionName === "users") renderUsers();
-        if (sectionName === "offers") renderOffers();
-      }
-      async function loadProducts() {
-        try {
-          const data = await apiRequest("/products");
-          if (data.success) {
-            products = data.data;
-            renderProducts();
-            updateStats();
-          }
-        } catch (error) {
-          console.error("Error loading products:", error);
-        }
-      }
-      async function saveProductToDB(productData) {
-        const id = document.getElementById("productId").value;
-        const method = id ? "PUT" : "POST";
-        const endpoint = id ? `/products/${id}` : "/products";
-
-        try {
-          const data = await apiRequest(endpoint, {
-            method: method,
-            body: JSON.stringify(productData),
-          });
-
-          if (data.success) {
-            showToast(
-              id
-                ? "تم تحديث المنتج في قاعدة البيانات"
-                : "تم إضافة المنتج إلى قاعدة البيانات",
-            );
-            closeProductModal();
-            loadProducts(); // إعادة تحميل المنتجات من القاعدة
-          } else {
-            showToast("حدث خطأ: " + (data.error || "غير معروف"));
-          }
-        } catch (error) {
-          showToast("حدث خطأ أثناء الاتصال بالخادم");
-        }
-      }
+      let quotes = [];
 
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
@@ -881,6 +914,7 @@
       function logout() {
         localStorage.removeItem("adminLoggedIn");
         localStorage.removeItem("adminUser");
+        localStorage.removeItem("adminToken");
         window.location.href = "admin-login.html";
       }
 
@@ -892,76 +926,112 @@
         );
       }
 
-      // Dashboard Stats
+      function showSection(sectionName) {
+        document.querySelectorAll("main section").forEach((section) => {
+          section.classList.add("hidden");
+        });
+
+        const targetSection = document.getElementById(`section-${sectionName}`);
+        if (targetSection) {
+          targetSection.classList.remove("hidden");
+        }
+
+        document.querySelectorAll(".nav-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        const activeNav = document.getElementById(`nav-${sectionName}`);
+        if (activeNav) {
+          activeNav.classList.add("active");
+        }
+
+        if (window.innerWidth < 1024) {
+          toggleSidebar();
+        }
+
+        if (sectionName === "products") renderProducts();
+        if (sectionName === "users") renderUsers();
+        if (sectionName === "offers") renderOffers();
+        if (sectionName === "quotes") loadQuotes();
+      }
+
+      function showToast(message, type = "error") {
+        const existing = document.getElementById("dashboardToast");
+        if (existing) existing.remove();
+
+        const toast = document.createElement("div");
+        toast.id = "dashboardToast";
+        toast.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl shadow-2xl z-[9999] text-white font-bold ${
+          type === "success" ? "bg-green-500" : "bg-red-500"
+        }`;
+        toast.textContent = message;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
+
+      async function loadProducts() {
+        try {
+          const data = await apiRequest("/products");
+          if (data && data.success) {
+            products = data.data || [];
+            renderProducts();
+            updateStats();
+          }
+        } catch (error) {
+          console.error("Error loading products:", error);
+        }
+      }
+
+      async function saveProductToDB(productData) {
+        const id = document.getElementById("productId").value;
+        const method = id ? "PUT" : "POST";
+        const endpoint = id ? `/products/${id}` : "/products";
+
+        try {
+          const data = await apiRequest(endpoint, {
+            method,
+            body: JSON.stringify(productData),
+          });
+
+          if (data.success) {
+            showToast(
+              id
+                ? "تم تحديث المنتج في قاعدة البيانات"
+                : "تم إضافة المنتج إلى قاعدة البيانات",
+              "success",
+            );
+            closeProductModal();
+            loadProducts();
+          } else {
+            showToast("حدث خطأ: " + (data.error || "غير معروف"));
+          }
+        } catch (error) {
+          showToast("حدث خطأ أثناء الاتصال بالخادم");
+        }
+      }
+
       function updateStats() {
         document.getElementById("statProducts").textContent = products.length;
         document.getElementById("statUsers").textContent = users.length;
         document.getElementById("productCount").textContent = products.length;
         document.getElementById("userCount").textContent = users.length;
         document.getElementById("offerCount").textContent = offers.length;
+        document.getElementById("quoteCount").textContent = quotes.length;
+        document.getElementById("statOrders").textContent = 0;
+
+        const totalQuotes = quotes.reduce(
+          (sum, q) => sum + Number(q.total_amount || 0),
+          0,
+        );
+        document.getElementById("statSales").textContent =
+          totalQuotes.toLocaleString("ar-SA");
+
         document.getElementById("lastUpdate").textContent =
           new Date().toLocaleString("ar-SA");
-      }
-
-      // Products Management
-      function renderProducts() {
-        const tbody = document.getElementById("productsTableBody");
-        const filter =
-          document.getElementById("productCategory")?.value || "all";
-        const search =
-          document.getElementById("productSearch")?.value.toLowerCase() || "";
-
-        let filtered = products;
-        if (filter !== "all")
-          filtered = filtered.filter((p) => p.category === filter);
-        if (search)
-          filtered = filtered.filter((p) =>
-            p.name.toLowerCase().includes(search),
-          );
-
-        tbody.innerHTML = filtered
-          .map(
-            (product) => `
-               <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                 <td class="px-6 py-4">
-                   <div class="flex items-center gap-3">
-                     <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover" />
-                     <div>
-                       <div class="font-bold text-gray-800 dark:text-white">${product.name}</div>
-                       <div class="text-sm text-gray-500 dark:text-gray-400">${product.desc || ""}</div>
-                     </div>
-                   </div>
-                 </td>
-                 <td class="px-6 py-4">
-                   <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                     ${getCategoryName(product.category)}
-                   </span>
-                 </td>
-                 <td class="px-6 py-4">
-                   <div class="font-bold text-armax-orange">${product.price} ر.س</div>
-                   ${product.oldPrice ? `<div class="text-sm text-gray-400 line-through">${product.oldPrice} ر.س</div>` : ""}
-                 </td>
-                 <td class="px-6 py-4">
-                   <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-                     نشط
-                   </span>
-                 </td>
-                 <td class="px-6 py-4">
-                   <div class="flex gap-2">
-                     <button onclick="editProduct(${product.id})" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center">
-                       <i class="fas fa-edit"></i>
-                     </button>
-                     <button onclick="deleteProduct(${product.id})" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center">
-                       <i class="fas fa-trash"></i>
-                     </button>
-                   </div>
-                 </td>
-               </tr>
-             `,
-          )
-          .join("");
-
-        updateStats();
       }
 
       function getCategoryName(cat) {
@@ -972,6 +1042,72 @@
           electronics: "أجهزة",
         };
         return names[cat] || cat;
+      }
+
+      function renderProducts() {
+        const tbody = document.getElementById("productsTableBody");
+        const filter =
+          document.getElementById("productCategoryFilter")?.value || "all";
+        const search =
+          document.getElementById("productSearch")?.value.toLowerCase() || "";
+
+        let filtered = products;
+        if (filter !== "all") {
+          filtered = filtered.filter((p) => p.category === filter);
+        }
+        if (search) {
+          filtered = filtered.filter((p) =>
+            (p.name || "").toLowerCase().includes(search),
+          );
+        }
+
+        tbody.innerHTML = filtered
+          .map(
+            (product) => `
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover" />
+                    <div>
+                      <div class="font-bold text-gray-800 dark:text-white">${product.name}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">${product.description || product.desc || ""}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                    ${getCategoryName(product.category)}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="font-bold text-armax-orange">${product.price} ر.س</div>
+                  ${
+                    product.oldPrice
+                      ? `<div class="text-sm text-gray-400 line-through">${product.oldPrice} ر.س</div>`
+                      : ""
+                  }
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+                    نشط
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex gap-2">
+                    <button onclick="editProduct('${product._id || product.id}')" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteProduct('${product._id || product.id}')" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `,
+          )
+          .join("");
+
+        updateStats();
       }
 
       function openProductModal() {
@@ -987,37 +1123,50 @@
       }
 
       function editProduct(id) {
-        const product = products.find((p) => p.id === id);
+        const product = products.find((p) => (p._id || p.id) == id);
         if (!product) return;
 
-        document.getElementById("productId").value = product.id;
-        document.getElementById("productName").value = product.name;
-        document.getElementById("productPrice").value = product.price;
+        document.getElementById("productId").value = product._id || product.id;
+        document.getElementById("productName").value = product.name || "";
+        document.getElementById("productPrice").value = product.price || "";
         document.getElementById("productOldPrice").value =
           product.oldPrice || "";
-        document.getElementById("productCategory").value = product.category;
-        document.getElementById("productImage").value = product.image;
-        document.getElementById("productDesc").value = product.desc || "";
+        document.getElementById("productCategory").value =
+          product.category || "cookware";
+        document.getElementById("productImage").value = product.image || "";
+        document.getElementById("productDesc").value =
+          product.description || product.desc || "";
 
         document.getElementById("productModalTitle").textContent = "تعديل منتج";
         document.getElementById("productModal").classList.remove("hidden");
       }
 
-      function deleteProduct(id) {
+      async function deleteProduct(id) {
         if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
-        products = products.filter((p) => p.id !== id);
-        localStorage.setItem("armax_products", JSON.stringify(products));
+
+        const data = await apiRequest(`/products/${id}`, {
+          method: "DELETE",
+        });
+
+        if (data.success) {
+          showToast("تم حذف المنتج بنجاح", "success");
+          addActivity("حذف منتج", `تم حذف المنتج رقم ${id}`);
+          loadProducts();
+        } else {
+          showToast(data.error || "فشل حذف المنتج");
+        }
+      }
+
+      function filterProducts() {
         renderProducts();
-        addActivity("حذف منتج", `تم حذف المنتج رقم ${id}`);
       }
 
       document
         .getElementById("productForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
-          const id = document.getElementById("productId").value;
+
           const productData = {
-            id: id ? parseInt(id) : Date.now(),
             name: document.getElementById("productName").value,
             price: parseInt(document.getElementById("productPrice").value),
             oldPrice:
@@ -1025,58 +1174,61 @@
               null,
             category: document.getElementById("productCategory").value,
             image: document.getElementById("productImage").value,
-            desc: document.getElementById("productDesc").value,
+            description: document.getElementById("productDesc").value,
+            categoryName: getCategoryName(
+              document.getElementById("productCategory").value,
+            ),
+            badge: "",
+            badgeText: "",
+            stock: 100,
+            isActive: true,
           };
 
-          if (id) {
-            const index = products.findIndex((p) => p.id == id);
-            products[index] = productData;
-            addActivity("تحديث منتج", `تم تحديث ${productData.name}`);
-          } else {
-            products.push(productData);
-            addActivity("إضافة منتج", `تم إضافة ${productData.name}`);
-          }
-
-          localStorage.setItem("armax_products", JSON.stringify(products));
-          closeProductModal();
-          renderProducts();
+          await saveProductToDB(productData);
         });
 
-      function filterProducts() {
-        renderProducts();
-      }
-
-      // Users Management
       function renderUsers() {
         const tbody = document.getElementById("usersTableBody");
         tbody.innerHTML = users
           .map(
             (user) => `
-               <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                 <td class="px-6 py-4">
-                   <div class="flex items-center gap-3">
-                     <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random" class="w-10 h-10 rounded-full" />
-                     <div class="font-bold text-gray-800 dark:text-white">${user.name}</div>
-                   </div>
-                 </td>
-                 <td class="px-6 py-4 text-gray-600 dark:text-gray-300">${user.email}</td>
-                 <td class="px-6 py-4">
-                   <span class="px-3 py-1 rounded-full text-xs font-bold ${user.role === "مدير" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"}">
-                     ${user.role}
-                   </span>
-                 </td>
-                 <td class="px-6 py-4">
-                   <span class="px-3 py-1 rounded-full text-xs font-bold ${user.status === "active" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}">
-                     ${user.status === "active" ? "نشط" : "غير نشط"}
-                   </span>
-                 </td>
-                 <td class="px-6 py-4">
-                   <button onclick="deleteUser(${user.id})" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center ${user.role === "مدير" ? "opacity-50 cursor-not-allowed" : ""}" ${user.role === "مدير" ? "disabled" : ""}>
-                     <i class="fas fa-trash"></i>
-                   </button>
-                 </td>
-               </tr>
-             `,
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      user.name,
+                    )}&background=random" class="w-10 h-10 rounded-full" />
+                    <div class="font-bold text-gray-800 dark:text-white">${user.name}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-gray-600 dark:text-gray-300">${user.email}</td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                    user.role === "مدير"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-blue-100 text-blue-600"
+                  }">
+                    ${user.role}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                    user.status === "active"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-600"
+                  }">
+                    ${user.status === "active" ? "نشط" : "غير نشط"}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <button onclick="deleteUser(${user.id})" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center ${
+                    user.role === "مدير" ? "opacity-50 cursor-not-allowed" : ""
+                  }" ${user.role === "مدير" ? "disabled" : ""}>
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            `,
           )
           .join("");
         updateStats();
@@ -1107,23 +1259,26 @@
         renderUsers();
       }
 
-      // Offers Management
       function renderOffers() {
         const grid = document.getElementById("offersGrid");
         grid.innerHTML = offers
           .map(
             (offer) => `
-               <div class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative group">
-                 <button onclick="deleteOffer(${offer.id})" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                   <i class="fas fa-trash"></i>
-                 </button>
-                 <div class="w-16 h-16 rounded-2xl bg-${offer.color}-100 dark:bg-${offer.color}-900/30 text-${offer.color}-600 flex items-center justify-center text-2xl mb-4">
-                   <i class="fas fa-${offer.icon}"></i>
-                 </div>
-                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">${offer.title}</h3>
-                 <p class="text-gray-600 dark:text-gray-400">${offer.desc}</p>
-               </div>
-             `,
+              <div class="bg-white dark:bg-armax-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative group">
+                <button onclick="deleteOffer(${offer.id})" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <div class="w-16 h-16 rounded-2xl ${
+                  offer.color === "blue"
+                    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+                    : "bg-orange-100 dark:bg-orange-900/30 text-orange-600"
+                } flex items-center justify-center text-2xl mb-4">
+                  <i class="fas fa-${offer.icon}"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">${offer.title}</h3>
+                <p class="text-gray-600 dark:text-gray-400">${offer.desc}</p>
+              </div>
+            `,
           )
           .join("");
         updateStats();
@@ -1154,21 +1309,23 @@
         renderOffers();
       }
 
-      // Activity Log
       function addActivity(action, details) {
         const activity = JSON.parse(
           localStorage.getItem("armax_activity") || "[]",
         );
+
         activity.unshift({
           id: Date.now(),
           action,
           details,
           time: new Date().toLocaleString("ar-SA"),
         });
+
         localStorage.setItem(
           "armax_activity",
           JSON.stringify(activity.slice(0, 10)),
         );
+
         renderActivity();
       }
 
@@ -1187,20 +1344,323 @@
         container.innerHTML = activity
           .map(
             (item) => `
-               <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                 <div class="w-2 h-2 rounded-full bg-armax-orange mt-2"></div>
-                 <div class="flex-1">
-                   <div class="font-bold text-gray-800 dark:text-white text-sm">${item.action}</div>
-                   <div class="text-gray-600 dark:text-gray-400 text-sm">${item.details}</div>
-                   <div class="text-xs text-gray-400 mt-1">${item.time}</div>
-                 </div>
-               </div>
-             `,
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <div class="w-2 h-2 rounded-full bg-armax-orange mt-2"></div>
+                <div class="flex-1">
+                  <div class="font-bold text-gray-800 dark:text-white text-sm">${item.action}</div>
+                  <div class="text-gray-600 dark:text-gray-400 text-sm">${item.details}</div>
+                  <div class="text-xs text-gray-400 mt-1">${item.time}</div>
+                </div>
+              </div>
+            `,
           )
           .join("");
       }
 
-      // Charts
+      async function loadQuotes() {
+        const tbody = document.getElementById("quotesTableBody");
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                جاري تحميل عروض الأسعار...
+              </td>
+            </tr>
+          `;
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/quotes`);
+          const result = await response.json();
+
+          if (result.success) {
+            quotes = result.data || [];
+            renderQuotes();
+            updateStats();
+          } else {
+            tbody.innerHTML = `
+              <tr>
+                <td colspan="7" class="px-6 py-8 text-center text-red-500">
+                  فشل تحميل عروض الأسعار
+                </td>
+              </tr>
+            `;
+          }
+        } catch (error) {
+          console.error("Error loading quotes:", error);
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-red-500">
+                حدث خطأ أثناء تحميل عروض الأسعار
+              </td>
+            </tr>
+          `;
+        }
+      }
+
+      function filterQuotes() {
+        renderQuotes();
+      }
+
+      function getQuoteStatusText(status) {
+        const labels = {
+          pending: "معلق",
+          approved: "معتمد",
+          rejected: "مرفوض",
+          expired: "منتهي",
+        };
+        return labels[status] || "معلق";
+      }
+
+      function getQuoteStatusClass(status) {
+        const classes = {
+          pending: "bg-yellow-100 text-yellow-700",
+          approved: "bg-green-100 text-green-700",
+          rejected: "bg-red-100 text-red-700",
+          expired: "bg-gray-100 text-gray-700",
+        };
+        return classes[status] || "bg-yellow-100 text-yellow-700";
+      }
+
+      function renderQuotes() {
+        const tbody = document.getElementById("quotesTableBody");
+        const search =
+          document.getElementById("quoteSearch")?.value.toLowerCase() || "";
+        const status =
+          document.getElementById("quoteStatusFilter")?.value || "all";
+
+        let filtered = [...quotes];
+
+        if (search) {
+          filtered = filtered.filter((q) => {
+            return (
+              String(q.quote_number || "")
+                .toLowerCase()
+                .includes(search) ||
+              String(q.client_name || "")
+                .toLowerCase()
+                .includes(search) ||
+              String(q.client_phone || "")
+                .toLowerCase()
+                .includes(search)
+            );
+          });
+        }
+
+        if (status !== "all") {
+          filtered = filtered.filter((q) => q.status === status);
+        }
+
+        if (!filtered.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                لا توجد عروض أسعار
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map(
+            (quote) => `
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <td class="px-6 py-4 font-bold text-armax-blue dark:text-armax-orange">
+                  ${quote.quote_number || "-"}
+                </td>
+                <td class="px-6 py-4 text-gray-700 dark:text-gray-200">
+                  ${quote.client_name || "-"}
+                </td>
+                <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
+                  ${
+                    quote.quote_date
+                      ? new Date(quote.quote_date).toLocaleDateString("ar-SA")
+                      : "-"
+                  }
+                </td>
+                <td class="px-6 py-4 font-bold text-gray-800 dark:text-white">
+                  ${Number(quote.total_amount || 0).toFixed(2)} ر.س
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold ${getQuoteStatusClass(
+                    quote.status,
+                  )}">
+                    ${getQuoteStatusText(quote.status)}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
+                  ${quote.items_count || 0}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex gap-2">
+                    <button onclick="viewQuote('${
+                      quote.quote_number
+                    }')" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="changeQuoteStatus(${
+                      quote.id
+                    }, 'approved')" class="w-8 h-8 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 flex items-center justify-center">
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button onclick="changeQuoteStatus(${
+                      quote.id
+                    }, 'rejected')" class="w-8 h-8 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 flex items-center justify-center">
+                      <i class="fas fa-ban"></i>
+                    </button>
+                    <button onclick="deleteQuoteFromDashboard(${
+                      quote.id
+                    })" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `,
+          )
+          .join("");
+      }
+
+      async function viewQuote(quoteNumber) {
+        try {
+          const response = await fetch(`${API_URL}/quotes/${quoteNumber}`);
+          const result = await response.json();
+
+          if (!result.success) {
+            showToast(result.error || "تعذر تحميل العرض");
+            return;
+          }
+
+          const q = result.data;
+          const itemsHtml = (q.items || [])
+            .map(
+              (item) => `
+                <tr class="border-b dark:border-gray-700">
+                  <td class="p-3">${item.product_name || "-"}</td>
+                  <td class="p-3">${item.unit || "-"}</td>
+                  <td class="p-3">${item.quantity || 0}</td>
+                  <td class="p-3">${item.unit_price || 0}</td>
+                  <td class="p-3 font-bold">${item.total_price || 0}</td>
+                </tr>
+              `,
+            )
+            .join("");
+
+          const modal = document.createElement("div");
+          modal.className =
+            "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4";
+
+          modal.innerHTML = `
+            <div class="bg-white dark:bg-armax-dark rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+              <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center">
+                <div>
+                  <h3 class="text-2xl font-black dark:text-white">عرض السعر ${
+                    q.quote_number
+                  }</h3>
+                  <p class="text-gray-500 dark:text-gray-400 mt-1">${
+                    q.client_name || "-"
+                  }</p>
+                </div>
+                <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-red-500">
+                  <i class="fas fa-times text-xl"></i>
+                </button>
+              </div>
+
+              <div class="p-6 space-y-6">
+                <div class="grid md:grid-cols-3 gap-4">
+                  <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
+                    <div class="text-sm text-gray-500">رقم العرض</div>
+                    <div class="font-bold mt-1">${q.quote_number || "-"}</div>
+                  </div>
+                  <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
+                    <div class="text-sm text-gray-500">العميل</div>
+                    <div class="font-bold mt-1">${q.client_name || "-"}</div>
+                  </div>
+                  <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
+                    <div class="text-sm text-gray-500">الإجمالي</div>
+                    <div class="font-bold mt-1">${Number(
+                      q.total_amount || 0,
+                    ).toFixed(2)} ر.س</div>
+                  </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                      <tr>
+                        <th class="p-3 text-right">الصنف</th>
+                        <th class="p-3 text-right">الوحدة</th>
+                        <th class="p-3 text-right">الكمية</th>
+                        <th class="p-3 text-right">سعر الوحدة</th>
+                        <th class="p-3 text-right">الإجمالي</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${
+                        itemsHtml ||
+                        `<tr><td colspan="5" class="p-6 text-center text-gray-500">لا توجد عناصر</td></tr>`
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+
+          document.body.appendChild(modal);
+        } catch (error) {
+          console.error(error);
+          showToast("تعذر تحميل تفاصيل العرض");
+        }
+      }
+
+      async function changeQuoteStatus(id, status) {
+        try {
+          const response = await fetch(`${API_URL}/quotes/${id}/status`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showToast("تم تحديث حالة العرض", "success");
+            loadQuotes();
+          } else {
+            showToast(result.error || "فشل تحديث الحالة");
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("حدث خطأ أثناء تحديث حالة العرض");
+        }
+      }
+
+      async function deleteQuoteFromDashboard(id) {
+        if (!confirm("هل أنت متأكد من حذف عرض السعر؟")) return;
+
+        try {
+          const response = await fetch(`${API_URL}/quotes/${id}`, {
+            method: "DELETE",
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showToast("تم حذف عرض السعر بنجاح", "success");
+            loadQuotes();
+          } else {
+            showToast(result.error || "فشل حذف العرض");
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("حدث خطأ أثناء حذف العرض");
+        }
+      }
+
       function initCharts() {
         const salesCtx = document.getElementById("salesChart").getContext("2d");
         new Chart(salesCtx, {
@@ -1252,15 +1712,18 @@
         });
       }
 
-      // Initialize
       document.addEventListener("DOMContentLoaded", () => {
-        updateStats();
         renderActivity();
+        renderUsers();
+        renderOffers();
         initCharts();
+        loadProducts();
 
         if (localStorage.getItem("darkMode") === "true") {
           document.documentElement.classList.add("dark");
         }
+
+        updateStats();
       });
     </script>
   </body>

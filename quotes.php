@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // الاتصال بقاعدة البيانات
 $host = 'localhost';
 $dbname = 'armax_test';
-$username = 'root'; // افتراضي في XAMPP
-$password = ''; // فارغ افتراضياً في XAMPP
+$username = 'root';
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
@@ -22,7 +22,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'فشل الاتصال بقاعدة البيانات']);
+    echo json_encode(['success' => false, 'error' => 'فشل الاتصال بقاعدة البيانات: ' . $e->getMessage()]);
     exit;
 }
 
@@ -34,8 +34,10 @@ switch ($method) {
         createQuote($pdo, $input);
         break;
     case 'GET':
-        if (isset($_GET['number'])) {
-            getQuote($pdo, $_GET['number']);
+        // دعم number أو quote_number (للتوافق مع JavaScript)
+        if (isset($_GET['number']) || isset($_GET['quote_number'])) {
+            $quoteNum = $_GET['number'] ?? $_GET['quote_number'];
+            getQuote($pdo, $quoteNum);
         } elseif (isset($_GET['search'])) {
             searchQuotes($pdo, $_GET['search']);
         } else {
@@ -66,6 +68,13 @@ switch ($method) {
 // إنشاء عرض سعر جديد
 function createQuote($pdo, $data) {
     try {
+        // التحقق من البيانات المطلوبة
+        if (empty($data['quoteNumber']) || empty($data['clientName'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'رقم العرض واسم العميل مطلوبان']);
+            return;
+        }
+
         $pdo->beginTransaction();
 
         $stmt = $pdo->prepare("INSERT INTO quotes (
@@ -82,7 +91,7 @@ function createQuote($pdo, $data) {
             $data['clientAddress'] ?? null,
             $data['quoteDate'],
             $data['validityDays'] ?? 14,
-            $data['validityDate'],
+            $data['validityDate'] ?? null,
             $data['subtotal'] ?? 0,
             $data['discountPercent'] ?? 0,
             $data['discountAmount'] ?? 0,
@@ -169,7 +178,7 @@ function getQuote($pdo, $quoteNumber) {
             return;
         }
 
-        // جلب المنتجات
+        // جلب المنتجات (items)
         $itemStmt = $pdo->prepare("SELECT * FROM quote_items WHERE quote_id = ?");
         $itemStmt->execute([$quote['id']]);
         $quote['items'] = $itemStmt->fetchAll();
@@ -215,7 +224,7 @@ function updateQuote($pdo, $id, $data) {
             $data['clientAddress'] ?? null,
             $data['quoteDate'],
             $data['validityDays'] ?? 14,
-            $data['validityDate'],
+            $data['validityDate'] ?? null,
             $data['subtotal'] ?? 0,
             $data['discountPercent'] ?? 0,
             $data['discountAmount'] ?? 0,
@@ -227,7 +236,7 @@ function updateQuote($pdo, $id, $data) {
             $id
         ]);
 
-        // تحديث المنتجات (حذف القديمة وإضافة الجديدة)
+        // تحديث المنتجات
         if (!empty($data['products']) && is_array($data['products'])) {
             $pdo->prepare("DELETE FROM quote_items WHERE quote_id = ?")->execute([$id]);
             
@@ -263,10 +272,15 @@ function updateQuote($pdo, $id, $data) {
 // حذف عرض سعر
 function deleteQuote($pdo, $id) {
     try {
-        // الحذف تلقائي للمنتجات والسجلات بفضل ON DELETE CASCADE
         $stmt = $pdo->prepare("DELETE FROM quotes WHERE id = ?");
         $stmt->execute([$id]);
-        echo json_encode(['success' => true, 'message' => 'تم الحذف بنجاح']);
+        
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => true, 'message' => 'تم الحذف بنجاح']);
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'العرض غير موجود']);
+        }
     } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
